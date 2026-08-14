@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PaliVida — Portal Clínico e Laudo Digital</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Cabeçalho Fiel à Imagem de Referência -->
+  <header class="app-header">
+    <div class="header-content">
+      <div class="brand" id="brand-logo">
+        <span class="brand-name">PaliVida</span>
+      </div>
+      
+      <!-- Navegação Principal -->
+      <nav class="main-nav">
+        <button id="nav-symptoms-btn" class="nav-tab active">Sinais e Sintomas</button>
+        <button id="nav-laudo-btn" class="nav-tab nav-highlight">Laudo Digital</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- VISÃO 1: CONSULTA DE SINAIS E SINTOMAS -->
+  <div id="symptoms-view" class="view-section">
+    
+    <!-- Hero Section com Busca Redirecionável -->
+    <section class="hero-search-section">
+      <div class="hero-container">
+        <h2>O que você está sentindo hoje?</h2>
+        <p>Pesquise por um sintoma ou condição abaixo para ser direcionado diretamente ao cartão correspondente:</p>
+        
+        <div class="search-box-container">
+          <div class="search-wrapper">
+            <span class="search-icon">🔍</span>
+            <input 
+              type="text" 
+              id="search-input" 
+              placeholder="Digite um sintoma (ex: dor, fadiga, ansiedade, febre)..."
+              aria-label="Buscar sintoma ou condição clínica"
+              autocomplete="off"
+            >
+            <button id="search-btn" class="search-action-btn">Buscar</button>
+          </div>
+
+          <!-- Dropdown de Sugestões Instantâneas -->
+          <ul id="search-suggestions" class="suggestions-list hidden"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Painel Fixo de Triagem com Gradiente Tricromático -->
+    <section id="triage-panel" class="triage-panel hidden">
+      <div class="triage-container">
+        <div class="triage-header">
+          <h3>Avaliação de Gravidade dos Sintomas Selecionados</h3>
+          <button id="reset-selection-btn" class="reset-btn">Limpar Seleção</button>
+        </div>
+        
+        <!-- Barra do Gradiente Tricromático -->
+        <div class="gradient-bar-container">
+          <div class="gradient-bar"></div>
+          <div id="gradient-indicator" class="gradient-indicator" style="left: 0%;"></div>
+        </div>
+
+        <div class="gradient-labels">
+          <span class="label-green">🟢 Pouco Preocupante</span>
+          <span class="label-yellow">🟡 Preocupante</span>
+          <span class="label-red">🔴 Muito Preocupante</span>
+        </div>
+
+        <!-- Banner Dinâmico de Resultado -->
+        <div id="triage-result-banner" class="triage-banner level-green">
+          <span id="triage-status-text">Selecione os sintomas abaixo para avaliar o nível de prioridade.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Conteúdo Principal e Grid Responsivo -->
+    <div class="app-container">
+      
+      <!-- Lateral de Navegação Rápida -->
+      <aside class="sidebar">
+        <h3>Índice Rápido</h3>
+        <nav id="symptom-nav" class="nav-list">
+          <!-- Gerado via JS -->
+        </nav>
+      </aside>
+
+      <!-- Cartões no Formato Accordion -->
+      <main class="main-content">
+        <div id="cards-container" class="cards-grid">
+          <!-- Gerado via JS -->
+        </div>
+      </main>
+
+    </div>
+  </div>
+
+  <!-- VISÃO 2: LAUDO DIGITAL / CARTEIRINHA DE IDENTIFICAÇÃO -->
+  <div id="laudo-digital-view" class="view-section hidden">
+    <div class="laudo-container">
+      
+      <div class="page-title-box">
+        <h2>Laudo Digital & Carteirinha do Paciente</h2>
+        <p>Preencha as informações abaixo para gerar a Carteirinha de Identificação Diagnóstica para acompanhamento individual e de emergência.</p>
+      </div>
+
+      <!-- BANNER DE AVISO LEGAL E CARÁTER INFORMATIVO -->
+      <div class="disclaimer-banner">
+        <div class="disclaimer-header">
+          <span class="disclaimer-icon">⚠️</span>
+          <strong>AVISO IMPORTANTE — DOCUMENTO EXCLUSIVAMENTE INFORMATIVO</strong>
+        </div>
+        <p>
+          Esta carteirinha e as informações contidas neste formulário possuem <strong>caráter estritamente informativo, orientativo e de suporte de emergência ao paciente e cuidadores</strong>. 
+          Este documento <strong>NÃO SUBSTITUI UM LAUDO MÉDICO OFICIAL, ATESTADO OU DIAGNÓSTICO FORMAL</strong> emitido por um profissional de saúde legalmente habilitado em seu conselho de classe (CRM).
+        </p>
+      </div>
+
+      <!-- FORMULÁRIO DE CADASTRO DO PACIENTE E DIAGNÓSTICO -->
+      <form id="carteirinha-form" class="laudo-form">
+        
+        <!-- SEÇÃO 1: DADOS PESSOAIS -->
+        <fieldset class="form-section">
+          <legend>1. Dados Pessoais do Paciente</legend>
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label for="paciente-nome">Nome Completo do Paciente *</label>
+              <input type="text" id="paciente-nome" required placeholder="Digite o nome completo">
+            </div>
+
+            <div class="form-group">
+              <label for="paciente-nascimento">Data de Nascimento *</label>
+              <input type="date" id="paciente-nascimento" required>
+            </div>
+
+            <div class="form-group">
+              <label for="paciente-documento">CPF ou Cartão SUS *</label>
+              <input type="text" id="paciente-documento" required placeholder="000.000.000-00">
+            </div>
+
+            <div class="form-group full-width">
+              <label for="paciente-endereco">Endereço Residencial / Cidade - UF</label>
+              <input type="text" id="paciente-endereco" placeholder="Rua, Número, Bairro, Cidade - UF">
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- SEÇÃO 2: CUIDADOR E CONTATO DE EMERGÊNCIA -->
+        <fieldset class="form-section">
+          <legend>2. Responsável, Cuidador e Contatos de Emergência</legend>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="cuidador-nome">Nome do Responsável / Cuidador *</label>
+              <input type="text" id="cuidador-nome" required placeholder="Nome do contato principal">
+            </div>
+
+            <div class="form-group">
+              <label for="cuidador-parentesco">Grau de Parentesco / Vinculo</label>
+              <input type="text" id="cuidador-parentesco" placeholder="Ex: Cônjuge, Filho(a), Cuidador">
+            </div>
+
+            <div class="form-group">
+              <label for="telefone-emergencia-1">Telefone de Emergência 1 *</label>
+              <input type="tel" id="telefone-emergencia-1" required placeholder="(00) 00000-0000">
+            </div>
+
+            <div class="form-group">
+              <label for="telefone-emergencia-2">Telefone de Emergência 2</label>
+              <input type="tel" id="telefone-emergencia-2" placeholder="(00) 00000-0000">
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- SEÇÃO 3: INFORMAÇÕES CLÍNICAS E DIAGNÓSTICAS -->
+        <fieldset class="form-section">
+          <legend>3. Diagnóstico e Condições Clínicas</legend>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="diagnostico-principal">Diagnóstico Principal / Condição *</label>
+              <input type="text" id="diagnostico-principal" required placeholder="Ex: Neoplasia, Insuficiência Cardíaca, etc.">
+            </div>
+
+            <div class="form-group">
+              <label for="codigo-cid">Código CID-10 / CID-11 (Se houver)</label>
+              <input type="text" id="codigo-cid" placeholder="Ex: C34, I50, etc.">
+            </div>
+
+            <div class="form-group full-width">
+              <label for="sintomas-predominantes">Sintomas Predominantes Frequentes *</label>
+              <input type="text" id="sintomas-predominantes" required placeholder="Ex: Dor crônica, Fadiga, Dispneia, Náusea">
+            </div>
+
+            <div class="form-group full-width">
+              <label for="alergias-restricoes">Alergias e Restrições Medicamentosas</label>
+              <input type="text" id="alergias-restricoes" placeholder="Ex: Alergia a Dipirona, Penicilina, AINEs">
+            </div>
+
+            <div class="form-group full-width">
+              <label for="medicamentos-continuos">Medicamentos de Uso Contínuo</label>
+              <textarea id="medicamentos-continuos" rows="3" placeholder="Liste os principais medicamentos em uso diário..."></textarea>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- SEÇÃO 4: ACOMPANHAMENTO PROFISSIONAL -->
+        <fieldset class="form-section">
+          <legend>4. Profissional e Unidade de Saúde de Referência</legend>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="medico-assistente">Médico Assistente / Profissional de Saúde</label>
+              <input type="text" id="medico-assistente" placeholder="Nome do médico acompanhante">
+            </div>
+
+            <div class="form-group">
+              <label for="medico-crm">CRM / Registro Profissional</label>
+              <input type="text" id="medico-crm" placeholder="CRM 000000/UF">
+            </div>
+
+            <div class="form-group full-width">
+              <label for="unidade-saude">Hospital / Unidade de Saúde de Referência</label>
+              <input type="text" id="unidade-saude" placeholder="Nome do Hospital, UBS ou Clínica de apoio">
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-submit">Gerar Carteirinha Digital</button>
+        </div>
+      </form>
+
+      <!-- ÁREA DE EXIBIÇÃO E PRÉ-VISUALIZAÇÃO DA CARTEIRINHA -->
+      <div id="carteirinha-preview-area" class="preview-area hidden">
+        <div class="preview-actions">
+          <button id="btn-print-carteirinha" class="btn-print">🖨️ Imprimir / Salvar PDF</button>
+          <button id="btn-edit-carteirinha" class="btn-edit">✏️ Editar Formulário</button>
+        </div>
+
+        <!-- CARTÃO DE IDENTIFICAÇÃO ESTILIZADO -->
+        <div id="carteirinha-card" class="carteirinha-card-layout">
+          
+          <div class="card-top-bar">
+            <div class="card-brand">
+              <span>PaliVida</span>
+              <small>Carteirinha de Identificação Informativa</small>
+            </div>
+            <div class="card-badge">INFORMATIVO</div>
+          </div>
+
+          <div class="card-body-grid">
+            <div class="card-field full">
+              <span class="field-title">Paciente:</span>
+              <span id="card-val-nome" class="field-value highlight">—</span>
+            </div>
+
+            <div class="card-field">
+              <span class="field-title">Data Nasc.:</span>
+              <span id="card-val-nasc" class="field-value">—</span>
+            </div>
+
+            <div class="card-field">
+              <span class="field-title">Doc/SUS:</span>
+              <span id="card-val-doc" class="field-value">—</span>
+            </div>
+
+            <div class="card-field full">
+              <span class="field-title">Diagnóstico Principal:</span>
+              <span id="card-val-diag" class="field-value alert-text">—</span>
+            </div>
+
+            <div class="card-field">
+              <span class="field-title">Código CID:</span>
+              <span id="card-val-cid" class="field-value">—</span>
+            </div>
+
+            <div class="card-field">
+              <span class="field-title">Sintomas Recorrentes:</span>
+              <span id="card-val-sintomas" class="field-value">—</span>
+            </div>
+
+            <div class="card-field full">
+              <span class="field-title">Alergias / Restrições:</span>
+              <span id="card-val-alergias" class="field-value bold-alert">—</span>
+            </div>
+
+            <div class="card-field full">
+              <span class="field-title">Medicamentos Continuos:</span>
+              <span id="card-val-meds" class="field-value">—</span>
+            </div>
+
+            <div class="card-field">
+              <span class="field-title">Responsável / Cuidador:</span>
+              <span id="card-val-cuidador" class="field-value">—</span>
+            </div>
+
+            <div class="card-field">
+              <span class="field-title">Contato Emergência:</span>
+              <span id="card-val-fone" class="field-value highlight-phone">—</span>
+            </div>
+
+            <div class="card-field">
+              <span class="field-title">Médico Assistente:</span>
+              <span id="card-val-medico" class="field-value">—</span>
+            </div>
+
+            <div class="card-field">
+              <span class="field-title">Hospital / Unidade:</span>
+              <span id="card-val-unidade" class="field-value">—</span>
+            </div>
+          </div>
+
+          <div class="card-footer-notice">
+            <span>DOCUMENTO DE CARÁTER EXCLUSIVAMENTE INFORMATIVO — NÃO SUBSTITUI LAUDO MÉDICO OFICIAL.</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <p>&copy; 2026 PaliVida — Material Didático e Clínico de Apoio ao Paciente e Profissional de Saúde.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
