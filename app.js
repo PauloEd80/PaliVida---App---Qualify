@@ -195,6 +195,13 @@ const previewArea = document.getElementById('carteirinha-preview-area');
 const btnPrint = document.getElementById('btn-print-carteirinha');
 const btnEdit = document.getElementById('btn-edit-carteirinha');
 
+// Leitura do PDF
+const pdfFileInput = document.getElementById('pdf-file-input');
+const pdfViewerSection = document.getElementById('pdf-viewer-section');
+const pdfFrame = document.getElementById('pdf-frame');
+const btnClosePdf = document.getElementById('btn-close-pdf');
+let currentPdfBlobUrl = null;
+
 /**
  * Controle de Alternância das Visões
  */
@@ -451,7 +458,6 @@ resetBtn.addEventListener('click', () => {
 carteirinhaForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
-  // Captura dos campos
   const nome = document.getElementById('paciente-nome').value;
   const nasc = document.getElementById('paciente-nascimento').value;
   const doc = document.getElementById('paciente-documento').value;
@@ -465,10 +471,8 @@ carteirinhaForm.addEventListener('submit', (e) => {
   const medico = document.getElementById('medico-assistente').value || 'Não informado';
   const unidade = document.getElementById('unidade-saude').value || 'Não informada';
 
-  // Formatação de data
   const dataFormatada = nasc.split('-').reverse().join('/');
 
-  // Preenchimento do cartão
   document.getElementById('card-val-nome').textContent = nome;
   document.getElementById('card-val-nasc').textContent = dataFormatada;
   document.getElementById('card-val-doc').textContent = doc;
@@ -482,7 +486,6 @@ carteirinhaForm.addEventListener('submit', (e) => {
   document.getElementById('card-val-medico').textContent = medico;
   document.getElementById('card-val-unidade').textContent = unidade;
 
-  // Exibe o resultado e rola até ele
   previewArea.classList.remove('hidden');
   previewArea.scrollIntoView({ behavior: 'smooth' });
 });
@@ -494,6 +497,50 @@ btnEdit.addEventListener('click', () => {
 btnPrint.addEventListener('click', () => {
   window.print();
 });
+
+/**
+ * Abrir e Visualizar PDF Local
+ */
+if (pdfFileInput) {
+  pdfFileInput.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    if (file.type !== 'application/pdf') {
+      alert('Por favor, selecione um arquivo válido no formato PDF.');
+      pdfFileInput.value = '';
+      return;
+    }
+
+    if (currentPdfBlobUrl) {
+      URL.revokeObjectURL(currentPdfBlobUrl);
+    }
+
+    currentPdfBlobUrl = URL.createObjectURL(file);
+    pdfFrame.src = currentPdfBlobUrl;
+
+    pdfViewerSection.classList.remove('hidden');
+    pdfViewerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+}
+
+/**
+ * Fechar a visualização do PDF
+ */
+if (btnClosePdf) {
+  btnClosePdf.addEventListener('click', () => {
+    pdfFrame.src = '';
+    
+    if (currentPdfBlobUrl) {
+      URL.revokeObjectURL(currentPdfBlobUrl);
+      currentPdfBlobUrl = null;
+    }
+
+    pdfViewerSection.classList.add('hidden');
+    pdfFileInput.value = '';
+  });
+}
 
 // Inicialização
 document.addEventListener('DOMContentLoaded', () => {
