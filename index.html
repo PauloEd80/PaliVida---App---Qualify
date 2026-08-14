@@ -11,7 +11,7 @@
 </head>
 <body>
 
-  <!-- Cabeçalho Fiel à Imagem de Referência -->
+  <!-- CABEÇALHO PRINCIPAL -->
   <header class="app-header">
     <div class="header-content">
       <div class="brand" id="brand-logo">
@@ -54,7 +54,7 @@
       </div>
     </section>
 
-    <!-- Painel Fixo de Triagem com Gradiente Tricromático -->
+    <!-- Painel de Triagem (Estático no Desktop / Flutuante no Mobile) -->
     <section id="triage-panel" class="triage-panel hidden">
       <div class="triage-container">
         <div class="triage-header">
@@ -108,7 +108,32 @@
       
       <div class="page-title-box">
         <h2>Laudo Digital & Carteirinha do Paciente</h2>
-        <p>Preencha as informações abaixo para gerar a Carteirinha de Identificação Diagnóstica para acompanhamento individual e de emergência.</p>
+        <p>Preencha as informações abaixo para gerar a Carteirinha de Identificação Diagnóstica ou abra um documento previamente salvo.</p>
+      </div>
+
+      <!-- BLOCO: ABRIR CARTEIRINHA EM PDF EXISTENTE -->
+      <div class="open-pdf-card">
+        <div class="open-pdf-info">
+          <h3>📂 Já possui uma Carteirinha baixada em PDF?</h3>
+          <p>Se você já gerou sua carteirinha anteriormente, busque o arquivo PDF em seu dispositivo para visualizá-lo diretamente no portal.</p>
+        </div>
+        <div class="open-pdf-action">
+          <label for="pdf-file-input" class="btn-upload-pdf">
+            🔍 Selecionar Arquivo PDF
+          </label>
+          <input type="file" id="pdf-file-input" accept="application/pdf" class="hidden-file-input">
+        </div>
+      </div>
+
+      <!-- BLOCO: ÁREA DE VISUALIZAÇÃO DO PDF IMPORTADO -->
+      <div id="pdf-viewer-section" class="pdf-viewer-section hidden">
+        <div class="pdf-viewer-header">
+          <h4>Visualizando Carteirinha Importada</h4>
+          <button id="btn-close-pdf" class="btn-close-pdf">❌ Fechar Visualização</button>
+        </div>
+        <div class="pdf-frame-wrapper">
+          <iframe id="pdf-frame" src="" title="Visualizador de Carteirinha em PDF"></iframe>
+        </div>
       </div>
 
       <!-- BANNER DE AVISO LEGAL E CARÁTER INFORMATIVO -->
