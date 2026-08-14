@@ -29,6 +29,12 @@
   --radius: 12px;
 }
 
+/* Proteção Global contra Vazamento Lateral */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -51,6 +57,7 @@ body {
   color: var(--text-header);
   padding: 1rem 1.5rem;
   box-shadow: var(--shadow-md);
+  width: 100%;
 }
 
 .header-content {
@@ -105,6 +112,7 @@ body {
 /* Alternância de Visões */
 .view-section {
   display: block;
+  width: 100%;
 }
 
 .view-section.hidden {
@@ -117,6 +125,7 @@ body {
   color: white;
   padding: 2.5rem 1.25rem;
   text-align: center;
+  width: 100%;
 }
 
 .hero-container {
@@ -142,7 +151,7 @@ body {
   margin: 0 auto;
 }
 
-/* Campo de Pesquisa no Estilo da Imagem */
+/* Campo de Pesquisa */
 .search-wrapper {
   display: flex;
   align-items: center;
@@ -242,6 +251,7 @@ body {
   position: relative;
   z-index: 90;
   box-shadow: var(--shadow-md);
+  width: 100%;
 }
 
 .triage-panel.hidden { display: none; }
@@ -340,7 +350,7 @@ body {
   border: 2px solid var(--alert-border);
 }
 
-/* Grid Principal & Estrutura do Índice Rápido (Desktop) */
+/* Grid Principal (Desktop) */
 .app-container {
   max-width: 1200px;
   width: 100%;
@@ -350,9 +360,10 @@ body {
   grid-template-columns: 240px 1fr;
   gap: 2rem;
   flex: 1;
+  box-sizing: border-box;
 }
 
-/* Sidebar no Desktop: Fixa suavemente sem sobrepor */
+/* Sidebar no Desktop */
 .sidebar {
   background: white;
   padding: 1.25rem;
@@ -399,6 +410,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  width: 100%;
 }
 
 .card {
@@ -408,7 +420,7 @@ body {
   box-shadow: var(--shadow-sm);
   overflow: hidden;
   transition: border-color 0.3s, box-shadow 0.3s;
-  scroll-margin-top: 20px; /* Evita que o topo do card fique escondido ao rolar */
+  scroll-margin-top: 20px;
 }
 
 .card.highlight-card {
@@ -485,6 +497,7 @@ body {
   cursor: pointer;
   font-size: 0.9rem;
   user-select: none;
+  word-break: break-word;
 }
 
 .symptom-checkbox-label:hover { background: #e0f2fe; }
@@ -516,8 +529,10 @@ body {
 /* VISÃO: LAUDO DIGITAL */
 .laudo-container {
   max-width: 900px;
+  width: 100%;
   margin: 2rem auto;
   padding: 0 1.5rem;
+  box-sizing: border-box;
 }
 
 .page-title-box {
@@ -569,6 +584,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  width: 100%;
 }
 
 .form-section {
@@ -616,6 +632,7 @@ body {
   outline: none;
   font-family: inherit;
   transition: all 0.2s;
+  width: 100%;
 }
 
 .form-group input::placeholder,
@@ -649,7 +666,7 @@ body {
 .btn-submit:hover { background-color: var(--btn-primary-hover); }
 
 /* CARTEIRINHA DIGITAL GERADA */
-.preview-area { margin-top: 2rem; }
+.preview-area { margin-top: 2rem; width: 100%; }
 
 .preview-actions {
   display: flex;
@@ -675,6 +692,7 @@ body {
   border-radius: 16px;
   padding: 1.75rem;
   box-shadow: var(--shadow-lg);
+  width: 100%;
 }
 
 .card-top-bar {
@@ -728,6 +746,7 @@ body {
   font-size: 1rem;
   font-weight: 600;
   color: var(--text-primary);
+  word-break: break-word;
 }
 
 .field-value.highlight {
@@ -758,10 +777,11 @@ body {
   color: #94a3b8;
   font-size: 0.85rem;
   margin-top: auto;
+  width: 100%;
 }
 
 /* ==========================================================================
-   OTIMIZAÇÃO RESPONSIVA EXCLUSIVA PARA CELULARES E TABLETS (< 900px)
+   REGRAS RESPONSIVAS STRICT-MOBILE (< 900px) - ZERO ROLAGEM LATERAL
    ========================================================================== */
 @media (max-width: 900px) {
   .app-header {
@@ -779,24 +799,24 @@ body {
   }
 
   .nav-tab {
-    padding: 0.45rem 1rem;
-    font-size: 0.88rem;
+    padding: 0.45rem 0.75rem;
+    font-size: 0.85rem;
     flex: 1;
     text-align: center;
   }
 
   .hero-search-section {
-    padding: 1.75rem 1rem;
+    padding: 1.5rem 1rem;
   }
 
   .hero-container h2 {
-    font-size: 1.4rem;
+    font-size: 1.35rem;
   }
 
   .search-wrapper {
     flex-direction: column;
     border-radius: 16px;
-    padding: 0.6rem;
+    padding: 0.5rem;
     gap: 0.5rem;
   }
 
@@ -815,42 +835,43 @@ body {
   .app-container {
     grid-template-columns: 1fr;
     padding: 0 1rem;
-    margin: 1.25rem auto;
-    gap: 1.25rem;
+    margin: 1rem auto;
+    gap: 1rem;
   }
 
-  /* OTIMIZAÇÃO CRÍTICA: Índice Rápido passa a ser Carrossel Horizontal Estático */
+  /* OTIMIZAÇÃO DO ÍNDICE RÁPIDO: Encaixe perfeito sem estouro de largura */
   .sidebar {
-    position: relative; /* Desativa a flutuação vertical que atrapalhava o scroll */
+    position: relative;
     top: 0;
-    padding: 0.85rem 1rem;
+    width: 100%;
+    padding: 0.75rem;
     box-shadow: var(--shadow-sm);
-    margin-bottom: 0.25rem;
   }
 
   .sidebar h3 {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     margin-bottom: 0.5rem;
     padding-bottom: 0.25rem;
   }
 
-  /* Transformação dos links em 'Pills' deslizáveis horizontalmente */
+  /* Quebra fluida de botões em linhas (flex-wrap) */
   .nav-list {
     flex-direction: row;
-    overflow-x: auto;
-    white-space: nowrap;
-    gap: 0.5rem;
-    padding-bottom: 0.4rem;
-    -webkit-overflow-scrolling: touch; /* Scroll fluido no iOS */
+    flex-wrap: wrap; /* Permite que os chips passem para a linha de baixo */
+    gap: 0.4rem;
+    justify-content: flex-start;
   }
 
   .nav-item {
-    flex: 0 0 auto;
+    flex: 1 1 auto; /* Os botões expandem para preencher a linha harmoniosamente */
+    text-align: center;
     background-color: #f1f5f9;
     border: 1px solid #cbd5e1;
-    padding: 0.45rem 0.85rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
+    padding: 0.45rem 0.75rem;
+    border-radius: 16px;
+    font-size: 0.82rem;
+    white-space: normal;
+    word-break: break-word;
   }
 
   .nav-item:active {
@@ -858,7 +879,7 @@ body {
     color: white;
   }
 
-  /* Ajustes dos Formitários e Cartões no Mobile */
+  /* Ajustes dos Formulários e Cartões no Mobile */
   .symptoms-checkbox-grid {
     grid-template-columns: 1fr;
   }
@@ -871,8 +892,12 @@ body {
     padding: 0 1.15rem 1.15rem 1.15rem;
   }
 
+  .laudo-container {
+    padding: 0 1rem;
+  }
+
   .laudo-form {
-    padding: 1.25rem;
+    padding: 1rem;
   }
 
   .form-grid {
@@ -884,11 +909,20 @@ body {
   }
 
   .carteirinha-card-layout {
-    padding: 1.15rem;
+    padding: 1rem;
+  }
+
+  .preview-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .btn-print, .btn-edit {
+    width: 100%;
   }
 }
 
-/* Estilos de Impressão (Sem alterações) */
+/* Estilos de Impressão */
 @media print {
   body * { visibility: hidden; }
   #carteirinha-card, #carteirinha-card * { visibility: visible; }
