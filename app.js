@@ -1,179 +1,79 @@
-/**
- * Base de Dados Estruturada
- */
 const dadosClinicos = [
   {
     id: "constipacao",
     titulo: "Constipação Intestinal",
     definicao: "Caracterizado por evacuações com baixa frequência, podendo ser também incompletas e difíceis.",
-    sinaisSintomas: [
-      "Dificuldade ou incapacidade de evacuar",
-      "Menos de três evacuações por semana",
-      "Eliminação de fezes endurecidas",
-      "Sensação de esvaziamento incompleto do reto"
-    ],
-    sinaisAlerta: [
-      "Início rápido",
-      "Náuseas ou vômito",
-      "Dificuldade na eliminação de flatos",
-      "Dor intensa",
-      "Distensão abdominal",
-      "Perda de peso sem explicação",
-      "Sangramento retal",
-      "Anemia ferropriva inexplicada"
-    ],
-    referencias: [
-      "OLIVEIRA, Adriana dos Santos et al. Sinais e sintomas na clínica médica. Unitins, 2024.",
-      "TIMERMAN, Sergio. Emergências Médicas - Passo a Passo. Guanabara Koogan, 2019."
-    ]
+    sinaisSintomas: ["Dificuldade ou incapacidade de evacuar", "Menos de três evacuações por semana", "Eliminação de fezes endurecidas", "Sensação de esvaziamento incompleto do reto"],
+    sinaisAlerta: ["Início rápido", "Náuseas ou vômito", "Dificuldade na eliminação de flatos", "Dor intensa", "Distensão abdominal", "Perda de peso sem explicação", "Sangramento retal", "Anemia ferropriva inexplicada"],
+    referencias: ["OLIVEIRA, Adriana dos Santos et al. Sinais e sintomas na clínica médica. Unitins, 2024.", "TIMERMAN, Sergio. Emergências Médicas - Passo a Passo. Guanabara Koogan, 2019."]
   },
   {
     id: "depressao",
     titulo: "Tristeza (Depressão)",
     definicao: "Variação de humor, marcada por tristeza, falta de motivação, ansiedade, sensação de vazio e falta de esperança.",
-    sinaisSintomas: [
-      "Humor deprimido",
-      "Perda do interesse em atividades diárias",
-      "Alterações do sono e do apetite",
-      "Lentificação ou agitação psicomotora",
-      "Fadiga e perda de energia",
-      "Falta de concentração e indecisão",
-      "Pensamentos de culpa excessiva"
-    ],
-    sinaisAlerta: [
-      "Agitação severa",
-      "Agressividade",
-      "Alteração do nível de consciência",
-      "Ideação ou tentativa suicida"
-    ],
-    referencias: [
-      "NUNES, Maria do Patrocínio T. D&T InforMed Clínica Médica. Manole, 2024.",
-      "TIMERMAN, Sergio. Emergências Médicas - Passo a Passo. Guanabara Koogan, 2019."
-    ]
+    sinaisSintomas: ["Humor deprimido", "Perda do interesse em atividades diárias", "Alterações do sono e do apetite", "Lentificação ou agitação psicomotora", "Fadiga e perda de energia", "Falta de concentração e indecisão", "Pensamentos de culpa excessiva"],
+    sinaisAlerta: ["Agitação severa", "Agressividade", "Alteração do nível de consciência", "Ideação ou tentativa suicida"],
+    referencias: ["NUNES, Maria do Patrocínio T. D&T InforMed Clínica Médica. Manole, 2024.", "TIMERMAN, Sergio. Emergências Médicas - Passo a Passo. Guanabara Koogan, 2019."]
   },
   {
     id: "ansiedade",
     titulo: "Ansiedade",
     definicao: "Mecanismo do organismo para nos avisar quando algo está errado. Caracterizado por tensão, hipervigilância e apreensão.",
-    sinaisSintomas: [
-      "Preocupações excessivas",
-      "Dificuldade em relaxar e tensão muscular",
-      "Sudorese e taquicardia",
-      "Sensação de falta de ar",
-      "Aceleração da fala e pensamento"
-    ],
-    sinaisAlerta: [
-      "Associação ao uso abusivo de substâncias",
-      "Ideação ou tentativa suicida"
-    ],
-    referencias: [
-      "NUNES, Maria do Patrocínio T. D&T InforMed Clínica Médica. Manole, 2024."
-    ]
+    sinaisSintomas: ["Preocupações excessivas", "Dificuldade em relaxar e tensão muscular", "Sudorese e taquicardia", "Sensação de falta de ar", "Aceleração da fala e pensamento"],
+    sinaisAlerta: ["Associação ao uso abusivo de substâncias", "Ideação ou tentativa suicida"],
+    referencias: ["NUNES, Maria do Patrocínio T. D&T InforMed Clínica Médica. Manole, 2024."]
   },
   {
     id: "dor",
     titulo: "Dor",
     definicao: "Reação do sistema nervoso de modo fisiológico a uma lesão tecidual decorrente de estímulos mecânicos, químicos ou térmicos.",
-    sinaisSintomas: [
-      "Náuseas e Vômitos",
-      "Sudorese e Palidez",
-      "Taquicardia e Hipertensão Arterial",
-      "Alteração do tônus muscular",
-      "Irritabilidade e alteração do sono"
-    ],
-    sinaisAlerta: [
-      "Dor de intensidade extrema sem alívio",
-      "Associação com perda motora repentina"
-    ],
-    referencias: [
-      "OLIVEIRA, Adriana dos Santos et al. Sinais e sintomas na clínica médica. Unitins, 2024.",
-      "CARVALHO, Ricardo T.; PARSONS, Henrique A. Manual de cuidados paliativos. ANCP, 2012."
-    ]
+    sinaisSintomas: ["Náuseas e Vômitos", "Sudorese e Palidez", "Taquicardia e Hipertensão Arterial", "Alteração do tônus muscular", "Irritabilidade e alteração do sono"],
+    sinaisAlerta: ["Dor de intensidade extrema sem alívio", "Associação com perda motora repentina"],
+    referencias: ["OLIVEIRA, Adriana dos Santos et al. Sinais e sintomas na clínica médica. Unitins, 2024.", "CARVALHO, Ricardo T.; PARSONS, Henrique A. Manual de cuidados paliativos. ANCP, 2012."]
   },
   {
     id: "nausea-vomito",
     titulo: "Náusea e Vômitos",
     definicao: "Náusea é a sensação subjetiva de incômodo que antecipa o vômito. Vômito é a eliminação forçada do conteúdo gástrico.",
-    sinaisSintomas: [
-      "Anorexia",
-      "Dor e distensão abdominal",
-      "Refluxo gastroesofágico"
-    ],
-    sinaisAlerta: [
-      "Febre alta",
-      "Cefaleia e alterações visuais/vertigens",
-      "Desidratação e instabilidade hemodinâmica",
-      "Alterações neurológicas agudas"
-    ],
-    referencias: [
-      "RIBEIRO, Sabrina Corrêa da C. Cuidados paliativos no paciente crítico. Manole, 2023."
-    ]
+    sinaisSintomas: ["Anorexia", "Dor e distensão abdominal", "Refluxo gastroesofágico"],
+    sinaisAlerta: ["Febre alta", "Cefaleia e alterações visuais/vertigens", "Desidratação e instabilidade hemodinâmica", "Alterações neurológicas agudas"],
+    referencias: ["RIBEIRO, Sabrina Corrêa da C. Cuidados paliativos no paciente crítico. Manole, 2023."]
   },
   {
     id: "dispneia",
     titulo: "Dispneia (Falta de Ar)",
     definicao: "Sensação de desconforto respiratório, percebido como falta de ar ou aumento do esforço respiratório.",
-    sinaisSintomas: [
-      "Ansiedade",
-      "Secreções respiratórias audíveis (sororoca)",
-      "Dispneia ao falar",
-      "Incursões respiratórias superficiais ou pausadas"
-    ],
-    sinaisAlerta: [
-      "Confusão mental aguda",
-      "Esforço respiratório insuficiente ou exaustão"
-    ],
-    referencias: [
-      "BERLINER, D. et al. The Differential Diagnosis of Dyspnea. 2016."
-    ]
+    sinaisSintomas: ["Ansiedade", "Secreções respiratórias audíveis (sororoca)", "Dispneia ao falar", "Incursões respiratórias superficiais ou pausadas"],
+    sinaisAlerta: ["Confusão mental aguda", "Esforço respiratório insuficiente ou exaustão"],
+    referencias: ["BERLINER, D. et al. The Differential Diagnosis of Dyspnea. 2016."]
   },
   {
     id: "fadiga",
     titulo: "Fadiga / Cansaço",
     definicao: "Sensação desagradável e subjetiva, englobando do cansaço à exaustão, interferindo na capacidade funcional.",
-    sinaisSintomas: [
-      "Perda de massa muscular e fraqueza",
-      "Falta de disposição diária",
-      "Lentidão de raciocínio e memória"
-    ],
-    sinaisAlerta: [
-      "Piora rápida da intensidade da fadiga",
-      "Inquietação ou letargia severa",
-      "Sonolência na maioria do tempo",
-      "Alteração marcante dos Sinais Vitais"
-    ],
-    referencias: [
-      "SOCIEDADE BRASILEIRA DE ONCOLOGIA CLÍNICA (SBOC). Manual de tratamento sintomático, 2025."
-    ]
+    sinaisSintomas: ["Perda de massa muscular e fraqueza", "Falta de disposição diária", "Lentidão de raciocínio e memória"],
+    sinaisAlerta: ["Piora rápida da intensidade da fadiga", "Inquietação ou letargia severa", "Sonolência na maioria do tempo", "Alteração marcante dos Sinais Vitais"],
+    referencias: ["SOCIEDADE BRASILEIRA DE ONCOLOGIA CLÍNICA (SBOC). Manual de tratamento sintomático, 2025."]
   },
   {
     id: "xerostomia",
     titulo: "Xerostomia (Boca Seca)",
     definicao: "Sensação de boca seca devido à diminuição da produção salivar ou alteração da sua composição.",
-    sinaisSintomas: [
-      "Saliva espessa ou ausência de saliva",
-      "Alteração do paladar e sensação de queimação",
-      "Dificuldade para mastigar, engolir e falar"
-    ],
-    sinaisAlerta: [
-      "Incapacidade total de se alimentar",
-      "Infeções orais disseminadas",
-      "Ressecamento das vias respiratórias e garganta"
-    ],
-    referencias: [
-      "FEIO, Madalena; SAPETA, Paula. Xerostomia em cuidados paliativos. 2005."
-    ]
+    sinaisSintomas: ["Saliva espessa ou ausência de saliva", "Alteração do paladar e sensação de queimação", "Dificuldade para mastigar, engolir e falar"],
+    sinaisAlerta: ["Incapacidade total de se alimentar", "Infeções orais disseminadas", "Ressecamento das vias respiratórias e garganta"],
+    referencias: ["FEIO, Madalena; SAPETA, Paula. Xerostomia em cuidados paliativos. 2005."]
   }
 ];
 
-// Estado Global
 const selectedSymptoms = new Set();
 const selectedAlerts = new Set();
 
-// Elementos DOM
 const navSymptomsBtn = document.getElementById('nav-symptoms-btn');
+const navNovoCadastroBtn = document.getElementById('nav-novo-cadastro-btn');
 const navLaudoBtn = document.getElementById('nav-laudo-btn');
+
 const symptomsView = document.getElementById('symptoms-view');
+const novoCadastroView = document.getElementById('novo-cadastro-view');
 const laudoView = document.getElementById('laudo-digital-view');
 const brandLogo = document.getElementById('brand-logo');
 
@@ -189,43 +89,44 @@ const triageBanner = document.getElementById('triage-result-banner');
 const triageStatusText = document.getElementById('triage-status-text');
 const resetBtn = document.getElementById('reset-selection-btn');
 
-// Form e Carteirinha
 const carteirinhaForm = document.getElementById('carteirinha-form');
 const previewArea = document.getElementById('carteirinha-preview-area');
 const btnPrint = document.getElementById('btn-print-carteirinha');
 const btnEdit = document.getElementById('btn-edit-carteirinha');
 
-// Leitura do PDF
 const pdfFileInput = document.getElementById('pdf-file-input');
 const pdfViewerSection = document.getElementById('pdf-viewer-section');
 const pdfFrame = document.getElementById('pdf-frame');
 const btnClosePdf = document.getElementById('btn-close-pdf');
+const btnFullscreenPdf = document.getElementById('btn-fullscreen-pdf');
 let currentPdfBlobUrl = null;
 
-/**
- * Controle de Alternância das Visões
- */
 function switchView(view) {
+  symptomsView.classList.add('hidden');
+  novoCadastroView.classList.add('hidden');
+  laudoView.classList.add('hidden');
+  
+  navSymptomsBtn.classList.remove('active', 'nav-highlight');
+  navNovoCadastroBtn.classList.remove('active', 'nav-highlight');
+  navLaudoBtn.classList.remove('active', 'nav-highlight');
+
   if (view === 'symptoms') {
     symptomsView.classList.remove('hidden');
-    laudoView.classList.add('hidden');
     navSymptomsBtn.classList.add('active');
-    navLaudoBtn.classList.remove('active');
-  } else {
-    symptomsView.classList.add('hidden');
+  } else if (view === 'novo-cadastro') {
+    novoCadastroView.classList.remove('hidden');
+    navNovoCadastroBtn.classList.add('active', 'nav-highlight');
+  } else if (view === 'laudo') {
     laudoView.classList.remove('hidden');
-    navSymptomsBtn.classList.remove('active');
-    navLaudoBtn.classList.add('active');
+    navLaudoBtn.classList.add('active', 'nav-highlight');
   }
 }
 
 navSymptomsBtn.addEventListener('click', () => switchView('symptoms'));
+navNovoCadastroBtn.addEventListener('click', () => switchView('novo-cadastro'));
 navLaudoBtn.addEventListener('click', () => switchView('laudo'));
 brandLogo.addEventListener('click', () => switchView('symptoms'));
 
-/**
- * Renderiza Lateral
- */
 function renderSidebar() {
   symptomNav.innerHTML = '';
   dadosClinicos.forEach(item => {
@@ -240,9 +141,6 @@ function renderSidebar() {
   });
 }
 
-/**
- * Renderiza Cards em Accordion
- */
 function renderCards() {
   cardsContainer.innerHTML = '';
 
@@ -254,12 +152,7 @@ function renderCards() {
     const sintomasItems = item.sinaisSintomas.map(s => {
       const isChecked = selectedSymptoms.has(s) ? 'checked' : '';
       const selectedClass = selectedSymptoms.has(s) ? 'selected' : '';
-      return `
-        <label class="symptom-checkbox-label ${selectedClass}">
-          <input type="checkbox" data-type="symptom" value="${s}" ${isChecked}>
-          <span>${s}</span>
-        </label>
-      `;
+      return `<label class="symptom-checkbox-label ${selectedClass}"><input type="checkbox" data-type="symptom" value="${s}" ${isChecked}><span>${s}</span></label>`;
     }).join('');
 
     let alertasSection = '';
@@ -267,20 +160,9 @@ function renderCards() {
       const alertasItems = item.sinaisAlerta.map(a => {
         const isChecked = selectedAlerts.has(a) ? 'checked' : '';
         const selectedClass = selectedAlerts.has(a) ? 'selected alert-item' : '';
-        return `
-          <label class="symptom-checkbox-label ${selectedClass}">
-            <input type="checkbox" data-type="alert" value="${a}" ${isChecked}>
-            <span>⚠️ ${a}</span>
-          </label>
-        `;
+        return `<label class="symptom-checkbox-label ${selectedClass}"><input type="checkbox" data-type="alert" value="${a}" ${isChecked}><span>⚠️ ${a}</span></label>`;
       }).join('');
-
-      alertasSection = `
-        <div style="margin-top: 1rem;">
-          <div class="section-label" style="color: #991b1b;">Sinais de Alerta</div>
-          <div class="symptoms-checkbox-grid">${alertasItems}</div>
-        </div>
-      `;
+      alertasSection = `<div style="margin-top: 1rem;"><div class="section-label" style="color: #991b1b;">Sinais de Alerta</div><div class="symptoms-checkbox-grid">${alertasItems}</div></div>`;
     }
 
     const refsHTML = item.referencias.map(r => `<li>${r}</li>`).join('');
@@ -290,7 +172,6 @@ function renderCards() {
         <h3 class="card-title">${item.titulo}</h3>
         <span class="accordion-icon">▼</span>
       </div>
-      
       <div class="card-body">
         <p class="card-definition">${item.definicao}</p>
         <div class="section-label">Marque os sintomas observados:</div>
@@ -302,7 +183,6 @@ function renderCards() {
         </details>
       </div>
     `;
-
     cardsContainer.appendChild(card);
   });
 
@@ -328,18 +208,13 @@ function openAndScrollToCard(cardId) {
   suggestionsList.classList.add('hidden');
 }
 
-/**
- * Busca e Autocomplete
- */
 searchInput.addEventListener('input', (e) => {
   const termo = e.target.value.toLowerCase().trim();
   suggestionsList.innerHTML = '';
-
   if (termo.length === 0) {
     suggestionsList.classList.add('hidden');
     return;
   }
-
   const resultados = [];
   dadosClinicos.forEach(item => {
     if (item.titulo.toLowerCase().includes(termo)) {
@@ -384,16 +259,12 @@ searchBtn.addEventListener('click', () => {
   }
 });
 
-/**
- * Triagem
- */
 function attachCheckboxListeners() {
   const checkboxes = document.querySelectorAll('input[type="checkbox"]');
   checkboxes.forEach(chk => {
     chk.addEventListener('change', (e) => {
       const value = e.target.value;
       const type = e.target.dataset.type;
-
       if (e.target.checked) {
         if (type === 'symptom') selectedSymptoms.add(value);
         if (type === 'alert') selectedAlerts.add(value);
@@ -401,7 +272,6 @@ function attachCheckboxListeners() {
         if (type === 'symptom') selectedSymptoms.delete(value);
         if (type === 'alert') selectedAlerts.delete(value);
       }
-
       updateTriageEvaluator();
       const parentLabel = e.target.closest('.symptom-checkbox-label');
       if (e.target.checked) {
@@ -423,7 +293,6 @@ function updateTriageEvaluator() {
     triagePanel.classList.add('hidden');
     return;
   }
-
   triagePanel.classList.remove('hidden');
   let positionPercentage = 0;
 
@@ -452,12 +321,8 @@ resetBtn.addEventListener('click', () => {
   renderCards();
 });
 
-/**
- * Processamento da Carteirinha Digital (Laudo Digital)
- */
 carteirinhaForm.addEventListener('submit', (e) => {
   e.preventDefault();
-
   const nome = document.getElementById('paciente-nome').value;
   const nasc = document.getElementById('paciente-nascimento').value;
   const doc = document.getElementById('paciente-documento').value;
@@ -493,56 +358,50 @@ carteirinhaForm.addEventListener('submit', (e) => {
 btnEdit.addEventListener('click', () => {
   carteirinhaForm.scrollIntoView({ behavior: 'smooth' });
 });
-
 btnPrint.addEventListener('click', () => {
   window.print();
 });
 
-/**
- * Abrir e Visualizar PDF Local
- */
 if (pdfFileInput) {
   pdfFileInput.addEventListener('change', (event) => {
     const file = event.target.files[0];
-
     if (!file) return;
-
     if (file.type !== 'application/pdf') {
       alert('Por favor, selecione um arquivo válido no formato PDF.');
       pdfFileInput.value = '';
       return;
     }
-
     if (currentPdfBlobUrl) {
       URL.revokeObjectURL(currentPdfBlobUrl);
     }
-
     currentPdfBlobUrl = URL.createObjectURL(file);
     pdfFrame.src = currentPdfBlobUrl;
+    
+    // Atualiza o link fallback para garantir visualização no celular (iOS/Android limitam iframes para PDF)
+    if (btnFullscreenPdf) {
+      btnFullscreenPdf.href = currentPdfBlobUrl;
+    }
 
     pdfViewerSection.classList.remove('hidden');
     pdfViewerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 }
 
-/**
- * Fechar a visualização do PDF
- */
 if (btnClosePdf) {
   btnClosePdf.addEventListener('click', () => {
     pdfFrame.src = '';
-    
     if (currentPdfBlobUrl) {
       URL.revokeObjectURL(currentPdfBlobUrl);
       currentPdfBlobUrl = null;
     }
-
+    if (btnFullscreenPdf) {
+      btnFullscreenPdf.href = '#';
+    }
     pdfViewerSection.classList.add('hidden');
     pdfFileInput.value = '';
   });
 }
 
-// Inicialização
 document.addEventListener('DOMContentLoaded', () => {
   renderSidebar();
   renderCards();
