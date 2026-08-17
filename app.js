@@ -95,6 +95,7 @@ const cardsContainer = document.getElementById('cards-container');
 const symptomNav = document.getElementById('symptom-nav');
 const searchInput = document.getElementById('search-input');
 const searchBtn = document.getElementById('search-btn');
+const micBtn = document.getElementById('mic-btn'); // Novo botão de voz
 const suggestionsList = document.getElementById('search-suggestions');
 
 const triagePanel = document.getElementById('triage-panel');
@@ -231,12 +232,50 @@ function openAndScrollToCard(cardId) {
   toggleCard(cardId, true);
   const card = document.getElementById(cardId);
   if (card) {
-    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Calculando um pequeno offset para considerar o painel sticky
+    const yOffset = -180; 
+    const y = card.getBoundingClientRect().top + window.pageYOffset + yOffset;
+    window.scrollTo({top: y, behavior: 'smooth'});
+    
     card.classList.add('highlight-card');
     setTimeout(() => card.classList.remove('highlight-card'), 2000);
   }
   suggestionsList.classList.add('hidden');
 }
+
+// CORREÇÃO: Função de execução da busca ao clicar no botão ou apertar Enter
+function performSearch() {
+  const termo = searchInput.value.toLowerCase().trim();
+  if (!termo) return;
+  
+  let bestMatch = null;
+  
+  for (const item of dadosClinicos) {
+    if (item.titulo.toLowerCase().includes(termo) || (item.sinonimos && item.sinonimos.some(sin => sin.toLowerCase().includes(termo)))) {
+      bestMatch = item.id;
+      break;
+    }
+    if (!bestMatch) {
+      const matchedSymptom = item.sinaisSintomas.find(s => s.toLowerCase().includes(termo));
+      if (matchedSymptom) {
+        bestMatch = item.id;
+        break;
+      }
+    }
+  }
+
+  if (bestMatch) {
+    openAndScrollToCard(bestMatch);
+    suggestionsList.classList.add('hidden');
+  } else {
+    alert('Nenhum resultado exato encontrado para: ' + termo);
+  }
+}
+
+searchBtn.addEventListener('click', performSearch);
+searchInput.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') performSearch();
+});
 
 searchInput.addEventListener('input', (e) => {
   const termo = e.target.value.toLowerCase().trim();
@@ -245,7 +284,6 @@ searchInput.addEventListener('input', (e) => {
   
   const resultados = [];
   dadosClinicos.forEach(item => {
-    // Busca pelo título ou sinônimos
     if (item.titulo.toLowerCase().includes(termo) || (item.sinonimos && item.sinonimos.some(sin => sin.toLowerCase().includes(termo)))) {
       resultados.push({ titulo: item.titulo, cardId: item.id, tipo: 'Condição' });
     }
@@ -269,6 +307,43 @@ searchInput.addEventListener('input', (e) => {
     suggestionsList.classList.add('hidden');
   }
 });
+
+// CORREÇÃO: Implementação da Busca por Voz (Web Speech API)
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (SpeechRecognition) {
+  const recognition = new SpeechRecognition();
+  recognition.lang = 'pt-BR';
+  recognition.continuous = false;
+  recognition.interimResults = false;
+
+  micBtn.addEventListener('click', () => {
+    recognition.start();
+    micBtn.classList.add('recording');
+    micBtn.textContent = '🔴';
+    searchInput.placeholder = "Ouvindo...";
+  });
+
+  recognition.addEventListener('result', (e) => {
+    const transcript = e.results[0][0].transcript;
+    searchInput.value = transcript.replace('.', ''); // Remove ponto final
+    searchInput.dispatchEvent(new Event('input')); // Aciona as sugestões
+    setTimeout(performSearch, 500); // Executa a busca automaticamente após meio segundo
+  });
+
+  recognition.addEventListener('end', () => {
+    micBtn.classList.remove('recording');
+    micBtn.textContent = '🎤';
+    searchInput.placeholder = "Ex: dor, enjoo, ansiedade...";
+  });
+  
+  recognition.addEventListener('error', (e) => {
+    micBtn.classList.remove('recording');
+    micBtn.textContent = '🎤';
+    searchInput.placeholder = "Erro ao ouvir. Tente digitar.";
+  });
+} else {
+  micBtn.style.display = 'none'; // Oculta se o navegador não suportar
+}
 
 function attachCheckboxListeners() {
   document.querySelectorAll('input[type="checkbox"]').forEach(chk => {
@@ -301,19 +376,19 @@ function updateTriageEvaluator() {
   triagePanel.classList.remove('hidden');
   let pos = 0;
 
-  // Lógica adaptada com linguagem focada no conforto do paciente (Paliativos)
+  // CORREÇÃO: Textos resumidos para melhor leitura no celular (evita amontoamento)
   if (totalAlerts > 0 || totalSymptoms >= 6) {
     pos = Math.min(75 + (totalAlerts * 8), 98);
     triageBanner.className = 'triage-banner level-red';
-    triageStatusText.innerHTML = `🚨 <strong>ATENÇÃO NECESSÁRIA:</strong> Sinal de alerta detectado. Recomendamos contatar sua equipe de saúde ou médico assistente.`;
+    triageStatusText.innerHTML = `🚨 <strong>ATENÇÃO:</strong> Sinais de alerta. Contate seu médico.`;
   } else if (totalSymptoms >= 3) {
     pos = 35 + (totalSymptoms * 8);
     triageBanner.className = 'triage-banner level-yellow';
-    triageStatusText.innerHTML = `⚠️ <strong>OBSERVAÇÃO:</strong> Múltiplos sintomas informados. Mantenha acompanhamento e relate na próxima consulta.`;
+    triageStatusText.innerHTML = `⚠️ <strong>OBSERVAÇÃO:</strong> Múltiplos sintomas. Relate na consulta.`;
   } else {
     pos = Math.max(10, totalSymptoms * 12);
     triageBanner.className = 'triage-banner level-green';
-    triageStatusText.innerHTML = `🟢 <strong>CONTROLE ADEQUADO:</strong> Sintomas isolados. Continue com a rotina de cuidados e siga prescrições médicas.`;
+    triageStatusText.innerHTML = `🟢 <strong>CONTROLE:</strong> Sintomas isolados. Siga as prescrições.`;
   }
   gradientIndicator.style.left = `${pos}%`;
 }
@@ -408,9 +483,6 @@ carteirinhaForm.addEventListener('submit', (e) => {
 btnEdit.addEventListener('click', () => carteirinhaForm.scrollIntoView({ behavior: 'smooth' }));
 btnPrint.addEventListener('click', () => window.print());
 
-// =====================================================================
-// CORREÇÃO: SOLUÇÃO ROBUSTA PARA PDF NO CELULAR (SEM DEPENDÊNCIAS EXT.)
-// =====================================================================
 if (pdfFileInput) {
   pdfFileInput.addEventListener('change', (event) => {
     currentPdfFile = event.target.files[0];
@@ -426,20 +498,17 @@ if (pdfFileInput) {
     
     currentPdfBlobUrl = URL.createObjectURL(currentPdfFile);
     
-    // Tenta renderizar no iframe (funciona no PC, ocultado via CSS no celular)
     pdfFrame.src = currentPdfBlobUrl;
     pdfViewerSection.classList.remove('hidden');
     pdfViewerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 }
 
-// Botão que faz o download ou abre nativamente no celular
 if (btnFullscreenPdf) {
   btnFullscreenPdf.addEventListener('click', (e) => {
     e.preventDefault();
     if (!currentPdfBlobUrl) return;
 
-    // Cria um link temporário para forçar o download/abertura nativa
     const a = document.createElement('a');
     a.href = currentPdfBlobUrl;
     a.download = currentPdfFile ? currentPdfFile.name : 'meu-laudo.pdf';
