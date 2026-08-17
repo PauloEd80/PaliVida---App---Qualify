@@ -14,35 +14,45 @@
   <!-- CABEÇALHO PRINCIPAL -->
   <header class="app-header">
     <div class="header-content">
-      <div class="brand" id="brand-logo">
+      <div class="brand" id="brand-logo" role="button" tabindex="0" aria-label="PaliVida — ir para a página de Sintomas">
+        <span class="brand-icon" aria-hidden="true">➕</span>
         <span class="brand-name">PaliVida</span>
       </div>
-      
-      <!-- Navegação Principal -->
-      <nav class="main-nav">
-        <button id="nav-symptoms-btn" class="nav-tab active">Sinais e Sintomas</button>
-        <button id="nav-novo-cadastro-btn" class="nav-tab">Novo Cadastro</button>
-        <button id="nav-laudo-btn" class="nav-tab">Minha Carteirinha</button>
+
+      <!-- Navegação Principal: no celular vira barra fixa no rodapé -->
+      <nav class="main-nav" aria-label="Navegação principal">
+        <button id="nav-symptoms-btn" class="nav-tab active" aria-current="page">
+          <span class="nav-icon" aria-hidden="true">🩺</span>
+          <span class="nav-label">Sintomas</span>
+        </button>
+        <button id="nav-novo-cadastro-btn" class="nav-tab">
+          <span class="nav-icon" aria-hidden="true">📝</span>
+          <span class="nav-label">Criar Cartão</span>
+        </button>
+        <button id="nav-laudo-btn" class="nav-tab">
+          <span class="nav-icon" aria-hidden="true">🪪</span>
+          <span class="nav-label">Meu Cartão</span>
+        </button>
       </nav>
     </div>
   </header>
 
   <!-- VISÃO 1: CONSULTA DE SINAIS E SINTOMAS -->
   <div id="symptoms-view" class="view-section">
-    
+
     <!-- Hero Section com Busca Redirecionável -->
     <section class="hero-search-section">
       <div class="hero-container">
         <h2>O que você está sentindo hoje?</h2>
-        <p>Pesquise por um sintoma ou condição abaixo para ser direcionado diretamente ao cartão correspondente:</p>
-        
+        <p>Digite um sintoma abaixo, ou toque em uma categoria para ver mais.</p>
+
         <div class="search-box-container">
           <div class="search-wrapper">
-            <span class="search-icon">🔍</span>
-            <input 
-              type="text" 
-              id="search-input" 
-              placeholder="Digite um sintoma (ex: dor, fadiga, ansiedade)..."
+            <span class="search-icon" aria-hidden="true">🔍</span>
+            <input
+              type="text"
+              id="search-input"
+              placeholder="Ex: dor, fadiga, ansiedade..."
               aria-label="Buscar sintoma ou condição clínica"
               autocomplete="off"
             >
@@ -59,10 +69,10 @@
     <section id="triage-panel" class="triage-panel hidden">
       <div class="triage-container">
         <div class="triage-header">
-          <h3>Avaliação de Gravidade dos Sintomas Selecionados</h3>
-          <button id="reset-selection-btn" class="reset-btn">Limpar Seleção</button>
+          <h3>Nível de Gravidade dos Sintomas Marcados</h3>
+          <button id="reset-selection-btn" class="reset-btn">🔄 Limpar Seleção</button>
         </div>
-        
+
         <!-- Barra do Gradiente Tricromático -->
         <div class="gradient-bar-container">
           <div class="gradient-bar"></div>
@@ -76,19 +86,19 @@
         </div>
 
         <!-- Banner Dinâmico de Resultado -->
-        <div id="triage-result-banner" class="triage-banner level-green">
-          <span id="triage-status-text">Selecione os sintomas abaixo para avaliar o nível de prioridade.</span>
+        <div id="triage-result-banner" class="triage-banner level-green" role="status" aria-live="polite">
+          <span id="triage-status-text">Marque os sintomas abaixo para ver o nível de prioridade.</span>
         </div>
       </div>
     </section>
 
-    <!-- Conteúdo Principal e Grid Responsivo -->
+    <!-- Conteúdo Principal -->
     <div class="app-container">
-      
-      <!-- Lateral de Navegação Rápida -->
+
+      <!-- Índice Rápido em formato de chips grandes -->
       <aside class="sidebar">
         <h3>Índice Rápido</h3>
-        <nav id="symptom-nav" class="nav-list">
+        <nav id="symptom-nav" class="nav-list" aria-label="Ir direto para uma condição">
           <!-- Gerado via JS -->
         </nav>
       </aside>
@@ -103,32 +113,41 @@
     </div>
   </div>
 
-  <!-- VISÃO 2: NOVO CADASTRO (GERAR LAUDO) -->
+  <!-- VISÃO 2: NOVO CADASTRO (GERAR LAUDO) — EM ETAPAS -->
   <div id="novo-cadastro-view" class="view-section hidden">
     <div class="laudo-container">
-      
+
       <div class="page-title-box">
-        <h2>Criar Novo Laudo Digital</h2>
-        <p>Ainda não possui uma carteirinha? Preencha os dados clínicos abaixo para gerar e baixar a sua Carteirinha de Identificação gratuitamente.</p>
+        <h2>Criar Meu Cartão de Identificação</h2>
+        <p>Responda algumas perguntas simples, um passo de cada vez, para gerar sua carteirinha gratuitamente.</p>
       </div>
 
       <!-- BANNER DE AVISO LEGAL E CARÁTER INFORMATIVO -->
       <div class="disclaimer-banner">
         <div class="disclaimer-header">
-          <span class="disclaimer-icon">⚠️</span>
+          <span class="disclaimer-icon" aria-hidden="true">⚠️</span>
           <strong>AVISO IMPORTANTE — DOCUMENTO INFORMATIVO</strong>
         </div>
         <p>
-          Esta carteirinha e as informações contidas neste formulário possuem <strong>caráter estritamente informativo, orientativo e de suporte de emergência ao paciente e cuidadores</strong>. 
+          Esta carteirinha e as informações contidas neste formulário possuem <strong>caráter estritamente informativo, orientativo e de suporte de emergência ao paciente e cuidadores</strong>.
           Este documento <strong>NÃO SUBSTITUI UM LAUDO MÉDICO OFICIAL, ATESTADO OU DIAGNÓSTICO FORMAL</strong>.
         </p>
       </div>
 
+      <!-- BARRA DE PROGRESSO DO ASSISTENTE -->
+      <div class="wizard-progress" role="group" aria-label="Progresso do formulário">
+        <div class="wizard-progress-bar">
+          <div id="wizard-progress-fill" class="wizard-progress-fill" style="width: 25%;"></div>
+        </div>
+        <p id="wizard-step-label" class="wizard-step-label">Passo 1 de 4 — Dados do Paciente</p>
+      </div>
+
       <!-- FORMULÁRIO DE CADASTRO DO PACIENTE E DIAGNÓSTICO -->
-      <form id="carteirinha-form" class="laudo-form">
-        <!-- SEÇÃO 1: DADOS PESSOAIS -->
-        <fieldset class="form-section">
-          <legend>1. Dados Pessoais do Paciente</legend>
+      <form id="carteirinha-form" class="laudo-form" novalidate>
+
+        <!-- PASSO 1: DADOS PESSOAIS -->
+        <fieldset class="form-section wizard-step" data-step="1">
+          <legend>1. Dados do Paciente</legend>
           <div class="form-grid">
             <div class="form-group full-width">
               <label for="paciente-nome">Nome Completo do Paciente *</label>
@@ -149,16 +168,16 @@
           </div>
         </fieldset>
 
-        <!-- SEÇÃO 2: CUIDADOR E CONTATO DE EMERGÊNCIA -->
-        <fieldset class="form-section">
-          <legend>2. Responsável, Cuidador e Contatos</legend>
+        <!-- PASSO 2: CUIDADOR E CONTATO DE EMERGÊNCIA -->
+        <fieldset class="form-section wizard-step hidden" data-step="2">
+          <legend>2. Cuidador e Contato de Emergência</legend>
           <div class="form-grid">
             <div class="form-group">
               <label for="cuidador-nome">Nome do Responsável / Cuidador *</label>
               <input type="text" id="cuidador-nome" required placeholder="Nome do contato principal">
             </div>
             <div class="form-group">
-              <label for="cuidador-parentesco">Grau de Parentesco / Vinculo</label>
+              <label for="cuidador-parentesco">Grau de Parentesco / Vínculo</label>
               <input type="text" id="cuidador-parentesco" placeholder="Ex: Cônjuge, Filho(a), Cuidador">
             </div>
             <div class="form-group">
@@ -172,8 +191,8 @@
           </div>
         </fieldset>
 
-        <!-- SEÇÃO 3: INFORMAÇÕES CLÍNICAS E DIAGNÓSTICAS -->
-        <fieldset class="form-section">
+        <!-- PASSO 3: INFORMAÇÕES CLÍNICAS E DIAGNÓSTICAS -->
+        <fieldset class="form-section wizard-step hidden" data-step="3">
           <legend>3. Diagnóstico e Condições Clínicas</legend>
           <div class="form-grid">
             <div class="form-group">
@@ -199,9 +218,9 @@
           </div>
         </fieldset>
 
-        <!-- SEÇÃO 4: ACOMPANHAMENTO PROFISSIONAL -->
-        <fieldset class="form-section">
-          <legend>4. Profissional e Unidade de Referência</legend>
+        <!-- PASSO 4: ACOMPANHAMENTO PROFISSIONAL -->
+        <fieldset class="form-section wizard-step hidden" data-step="4">
+          <legend>4. Equipe de Saúde (opcional)</legend>
           <div class="form-grid">
             <div class="form-group">
               <label for="medico-assistente">Médico Assistente</label>
@@ -217,6 +236,14 @@
             </div>
           </div>
         </fieldset>
+
+        <div id="wizard-error-msg" class="wizard-error hidden" role="alert"></div>
+
+        <div class="wizard-nav-buttons">
+          <button type="button" id="wizard-back-btn" class="btn-wizard-back hidden">◀ Voltar</button>
+          <button type="button" id="wizard-next-btn" class="btn-wizard-next">Continuar ▶</button>
+          <button type="submit" id="wizard-submit-btn" class="btn-submit hidden">✅ Gerar Minha Carteirinha</button>
+        </div>
 
         <div class="form-actions">
           <button type="submit" class="btn-submit">Gerar Minha Carteirinha</button>
@@ -254,6 +281,10 @@
               <span id="card-val-doc" class="field-value">—</span>
             </div>
             <div class="card-field full">
+              <span class="field-title">Endereço:</span>
+              <span id="card-val-endereco" class="field-value">—</span>
+            </div>
+            <div class="card-field full">
               <span class="field-title">Diagnóstico Principal:</span>
               <span id="card-val-diag" class="field-value alert-text">—</span>
             </div>
@@ -270,7 +301,7 @@
               <span id="card-val-alergias" class="field-value bold-alert">—</span>
             </div>
             <div class="card-field full">
-              <span class="field-title">Medicamentos Continuos:</span>
+              <span class="field-title">Medicamentos Contínuos:</span>
               <span id="card-val-meds" class="field-value">—</span>
             </div>
             <div class="card-field">
@@ -278,8 +309,12 @@
               <span id="card-val-cuidador" class="field-value">—</span>
             </div>
             <div class="card-field">
-              <span class="field-title">Contato Emergência:</span>
+              <span class="field-title">Contato Emergência 1:</span>
               <span id="card-val-fone" class="field-value highlight-phone">—</span>
+            </div>
+            <div class="card-field">
+              <span class="field-title">Contato Emergência 2:</span>
+              <span id="card-val-fone2" class="field-value highlight-phone">—</span>
             </div>
             <div class="card-field">
               <span class="field-title">Médico Assistente:</span>
@@ -302,7 +337,7 @@
   <!-- VISÃO 3: LAUDO DIGITAL (ABRIR ARQUIVO) -->
   <div id="laudo-digital-view" class="view-section hidden">
     <div class="laudo-container">
-      
+
       <div class="page-title-box">
         <h2>Minha Carteirinha Digital</h2>
         <p>Acesse rapidamente sua carteirinha. Selecione o arquivo PDF que você salvou no seu celular ou computador.</p>
