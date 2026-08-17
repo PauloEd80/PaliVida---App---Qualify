@@ -1,329 +1,271 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>PaliVida — Portal Clínico e Laudo Digital</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Busca e Sintomas</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f8;
+      color: #333;
+      padding-bottom: 50px;
+    }
+
+    /* 1. Barra de Alerta Acompanha a Tela na Rolagem */
+    .alert-sticky-bar {
+      position: sticky;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 14px 20px;
+      color: #ffffff;
+      font-weight: 600;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      transition: background 0.4s ease;
+      background: linear-gradient(135deg, #2196F3, #1E88E5);
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 0 15px;
+    }
+
+    /* 2. Caixa de Busca Flexível sem Vazamentos no Mobile */
+    .search-container {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      background: #ffffff;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      overflow: hidden; /* Garante o encaixe perfeito dos botões */
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      transition: border-color 0.3s;
+    }
+
+    .search-container:focus-within {
+      border-color: #1E88E5;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 0; /* Evita estouro de largura em telas pequenas */
+      border: none;
+      outline: none;
+      padding: 12px 14px;
+      font-size: 16px;
+    }
+
+    .btn-action {
+      border: none;
+      background: transparent;
+      padding: 12px 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0; /* Impede a compressão do botão */
+      transition: background-color 0.2s;
+    }
+
+    .btn-action:hover {
+      background-color: #f0f0f0;
+    }
+
+    .btn-search {
+      background-color: #1E88E5;
+      color: #ffffff;
+      font-weight: bold;
+    }
+
+    .btn-search:hover {
+      background-color: #1565C0;
+    }
+
+    /* Animação Visual do Microfone Gravando */
+    .btn-mic.recording {
+      color: #d32f2f;
+      animation: pulse 1.2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+      100% { transform: scale(1); }
+    }
+
+    .symptom-section {
+      margin-top: 30px;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .symptom-section h2 {
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+
+    .symptom-select {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .results-area {
+      margin-top: 20px;
+      padding: 15px;
+      background: #ffffff;
+      border-radius: 8px;
+      min-height: 80px;
+    }
+  </style>
 </head>
 <body>
 
-  <header class="app-header">
-    <div class="header-content">
-      <div class="brand" id="brand-logo" role="button" tabindex="0" aria-label="PaliVida — ir para a página de Sintomas">
-        <span class="brand-icon" aria-hidden="true">➕</span>
-        <span class="brand-name">PaliVida</span>
-      </div>
+  <!-- Alerta Persistente na Parte Superior -->
+  <div id="alertBar" class="alert-sticky-bar">
+    Status: Nenhum sintoma selecionado
+  </div>
 
-      <nav class="main-nav" aria-label="Navegação principal">
-        <button id="nav-symptoms-btn" class="nav-tab active" aria-current="page">
-          <span class="nav-icon" aria-hidden="true">🩺</span>
-          <span class="nav-label">Sintomas</span>
-        </button>
-        <button id="nav-novo-cadastro-btn" class="nav-tab">
-          <span class="nav-icon" aria-hidden="true">📝</span>
-          <span class="nav-label">Criar Cadastro</span>
-        </button>
-        <button id="nav-laudo-btn" class="nav-tab">
-          <span class="nav-icon" aria-hidden="true">🪪</span>
-          <span class="nav-label">Meu Cadastro</span>
-        </button>
-      </nav>
+  <div class="container">
+    <!-- Caixa de Busca Integrada (Texto + Voz + Ação) -->
+    <div class="search-container">
+      <input type="text" id="searchInput" class="search-input" placeholder="Buscar sintoma ou condição..." />
+      
+      <!-- Botão para Busca por Áudio -->
+      <button type="button" id="micBtn" class="btn-action btn-mic" title="Buscar por voz">
+        🎙️
+      </button>
+      
+      <!-- Botão de Busca Textual Alinhado -->
+      <button type="button" id="searchBtn" class="btn-action btn-search">
+        Buscar
+      </button>
     </div>
-  </header>
 
-  <div id="symptoms-view" class="view-section">
-    <section class="hero-search-section">
-      <div class="hero-container">
-        <h2>O que você está sentindo hoje?</h2>
-        <p>Digite um sintoma abaixo, ou toque em uma categoria para ver mais.</p>
-        <div class="search-box-container">
-          <div class="search-wrapper">
-            <span class="search-icon" aria-hidden="true">🔍</span>
-            <input type="text" id="search-input" placeholder="Ex: dor, enjoo, ansiedade..." aria-label="Buscar sintoma ou condição clínica" autocomplete="off">
-            <button id="search-btn" class="search-action-btn">Buscar</button>
-          </div>
-          <ul id="search-suggestions" class="suggestions-list hidden"></ul>
-        </div>
-      </div>
-    </section>
+    <!-- Interface de Seleção para Modificar o Gradiente de Alerta -->
+    <div class="symptom-section">
+      <h2>Selecione um Sintoma para Testar o Gradiente:</h2>
+      <select id="symptomSelect" class="symptom-select">
+        <option value="none">Nenhum selecionado</option>
+        <option value="leve">Leve (Ex: Coriza, Espirros)</option>
+        <option value="moderado">Moderado (Ex: Febre, Tosse contínua)</option>
+        <option value="grave">Grave (Ex: Falta de ar, Dor no peito)</option>
+      </select>
+    </div>
 
-    <section id="triage-panel" class="triage-panel hidden">
-      <div class="triage-container">
-        <div class="triage-header">
-          <h3>Nível de Atenção dos Sintomas Marcados</h3>
-          <button id="reset-selection-btn" class="reset-btn">🔄 Limpar Seleção</button>
-        </div>
-        <div class="gradient-bar-container">
-          <div class="gradient-bar"></div>
-          <div id="gradient-indicator" class="gradient-indicator" style="left: 0%;"></div>
-        </div>
-        <div class="gradient-labels">
-          <span class="label-green">🟢 Controle Adequado</span>
-          <span class="label-yellow">🟡 Observação</span>
-          <span class="label-red">🔴 Atenção Necessária</span>
-        </div>
-        <div id="triage-result-banner" class="triage-banner level-green" role="status" aria-live="polite">
-          <span id="triage-status-text">Marque os sintomas abaixo para ver as orientações.</span>
-        </div>
-      </div>
-    </section>
-
-    <div class="app-container">
-      <aside class="sidebar">
-        <h3>Índice Rápido</h3>
-        <nav id="symptom-nav" class="nav-list" aria-label="Ir direto para uma condição"></nav>
-      </aside>
-      <main class="main-content">
-        <div id="cards-container" class="cards-grid"></div>
-      </main>
+    <div class="results-area" id="resultsArea">
+      <p>Os resultados da busca serão exibidos neste painel.</p>
     </div>
   </div>
 
-  <div id="novo-cadastro-view" class="view-section hidden">
-    <div class="laudo-container">
-      <div class="page-title-box">
-        <h2>Criar Meu Cartão de Identificação</h2>
-        <p>Responda algumas perguntas simples, um passo de cada vez, para gerar sua carteirinha gratuitamente.</p>
-      </div>
+  <script>
+    // 1. Lógica do Gradiente Dinâmico e Fixo
+    const alertBar = document.getElementById('alertBar');
+    const symptomSelect = document.getElementById('symptomSelect');
 
-      <div class="disclaimer-banner">
-        <div class="disclaimer-header">
-          <span class="disclaimer-icon" aria-hidden="true">⚠️</span>
-          <strong>AVISO IMPORTANTE — DOCUMENTO INFORMATIVO</strong>
-        </div>
-        <p>Esta carteirinha possui caráter estritamente orientativo e de suporte. <strong>NÃO SUBSTITUI UM LAUDO MÉDICO OFICIAL</strong>.</p>
-      </div>
+    const gradients = {
+      none: 'linear-gradient(135deg, #2196F3, #1E88E5)',
+      leve: 'linear-gradient(135deg, #4CAF50, #2E7D32)',     // Verde
+      moderado: 'linear-gradient(135deg, #FF9800, #EF6C00)', // Laranja
+      grave: 'linear-gradient(135deg, #F44336, #C62828)'    // Vermelho
+    };
 
-      <div class="wizard-progress" role="group" aria-label="Progresso do formulário">
-        <div class="wizard-progress-bar">
-          <div id="wizard-progress-fill" class="wizard-progress-fill" style="width: 25%;"></div>
-        </div>
-        <p id="wizard-step-label" class="wizard-step-label">Passo 1 de 4 — Dados do Paciente</p>
-      </div>
+    const alertText = {
+      none: 'Status: Nenhum sintoma selecionado',
+      leve: 'Alerta Leve: Monitoramento de sintomas de baixa gravidade',
+      moderado: 'Alerta Moderado: Atenção necessária, avalie consulta',
+      grave: 'ALERTA GRAVE: Sintoma crítico. Procure atendimento imediato'
+    };
 
-      <form id="carteirinha-form" class="laudo-form" novalidate>
-        <fieldset class="form-section wizard-step" data-step="1">
-          <legend>1. Dados do Paciente</legend>
-          <div class="form-grid">
-            <div class="form-group full-width">
-              <label for="paciente-nome">Nome Completo do Paciente *</label>
-              <input type="text" id="paciente-nome" required placeholder="Digite o nome completo">
-            </div>
-            <div class="form-group">
-              <label for="paciente-nascimento">Data de Nascimento *</label>
-              <input type="date" id="paciente-nascimento" required>
-            </div>
-            <div class="form-group">
-              <label for="paciente-documento">CPF ou Cartão SUS *</label>
-              <input type="text" id="paciente-documento" required placeholder="000.000.000-00">
-            </div>
-            <div class="form-group full-width">
-              <label for="paciente-endereco">Endereço Residencial / Cidade - UF</label>
-              <input type="text" id="paciente-endereco" placeholder="Rua, Número, Bairro, Cidade - UF">
-            </div>
-          </div>
-        </fieldset>
+    symptomSelect.addEventListener('change', (e) => {
+      const level = e.target.value;
+      alertBar.style.background = gradients[level] || gradients.none;
+      alertBar.textContent = alertText[level] || alertText.none;
+    });
 
-        <fieldset class="form-section wizard-step hidden" data-step="2">
-          <legend>2. Cuidador e Contato de Emergência</legend>
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="cuidador-nome">Nome do Responsável / Cuidador *</label>
-              <input type="text" id="cuidador-nome" required placeholder="Nome do contato principal">
-            </div>
-            <div class="form-group">
-              <label for="cuidador-parentesco">Grau de Parentesco / Vínculo</label>
-              <input type="text" id="cuidador-parentesco" placeholder="Ex: Cônjuge, Filho(a), Cuidador">
-            </div>
-            <div class="form-group">
-              <label for="telefone-emergencia-1">Telefone de Emergência 1 *</label>
-              <input type="tel" id="telefone-emergencia-1" required placeholder="(00) 00000-0000">
-            </div>
-            <div class="form-group">
-              <label for="telefone-emergencia-2">Telefone de Emergência 2</label>
-              <input type="tel" id="telefone-emergencia-2" placeholder="(00) 00000-0000">
-            </div>
-          </div>
-        </fieldset>
+    // 2. Execução da Busca
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const resultsArea = document.getElementById('resultsArea');
 
-        <fieldset class="form-section wizard-step hidden" data-step="3">
-          <legend>3. Diagnóstico e Condições Clínicas</legend>
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="diagnostico-principal">Diagnóstico Principal / Condição *</label>
-              <input type="text" id="diagnostico-principal" required placeholder="Ex: Neoplasia, Insuficiência Cardíaca...">
-            </div>
-            <div class="form-group">
-              <label for="codigo-cid">Código CID-10 / CID-11</label>
-              <input type="text" id="codigo-cid" placeholder="Ex: C34, I50...">
-            </div>
-            <div class="form-group full-width">
-              <label for="sintomas-predominantes">Sintomas Predominantes *</label>
-              <input type="text" id="sintomas-predominantes" required placeholder="Ex: Dor crônica, Fadiga, Dispneia">
-            </div>
-            <div class="form-group full-width">
-              <label for="alergias-restricoes">Alergias e Restrições Medicamentosas</label>
-              <input type="text" id="alergias-restricoes" placeholder="Ex: Alergia a Dipirona, Penicilina">
-            </div>
-            <div class="form-group full-width">
-              <label for="medicamentos-continuos">Medicamentos de Uso Contínuo</label>
-              <textarea id="medicamentos-continuos" rows="3" placeholder="Liste os medicamentos em uso diário..."></textarea>
-            </div>
-          </div>
-        </fieldset>
+    function executeSearch(query) {
+      if (!query.trim()) return;
+      resultsArea.innerHTML = `<p><strong>Consulta realizada para:</strong> "${query}"</p>`;
+    }
 
-        <fieldset class="form-section wizard-step hidden" data-step="4">
-          <legend>4. Equipe de Saúde (opcional)</legend>
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="medico-assistente">Médico Assistente</label>
-              <input type="text" id="medico-assistente" placeholder="Nome do médico">
-            </div>
-            <div class="form-group">
-              <label for="medico-crm">CRM / Registro Profissional</label>
-              <input type="text" id="medico-crm" placeholder="CRM 000000/UF">
-            </div>
-            <div class="form-group full-width">
-              <label for="unidade-saude">Hospital / Unidade de Referência</label>
-              <input type="text" id="unidade-saude" placeholder="Nome do Hospital, UBS ou Clínica">
-            </div>
-          </div>
-        </fieldset>
+    searchBtn.addEventListener('click', () => executeSearch(searchInput.value));
+    searchInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') executeSearch(searchInput.value);
+    });
 
-        <div id="wizard-error-msg" class="wizard-error hidden" role="alert"></div>
+    // 3. Implementação da Web Speech API (Busca por Áudio)
+    const micBtn = document.getElementById('micBtn');
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-        <div class="wizard-nav-buttons">
-          <button type="button" id="wizard-back-btn" class="btn-wizard-back hidden">◀ Voltar</button>
-          <button type="button" id="wizard-next-btn" class="btn-wizard-next">Continuar ▶</button>
-          <button type="submit" id="wizard-submit-btn" class="btn-submit hidden">✅ Gerar Minha Carteirinha</button>
-        </div>
-      </form>
+    if (SpeechRecognition) {
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'pt-BR';
+      recognition.continuous = false;
+      recognition.interimResults = false;
 
-      <div id="carteirinha-preview-area" class="preview-area hidden">
-        <div class="preview-actions">
-          <button id="btn-print-carteirinha" class="btn-print">🖨️ Imprimir / Salvar PDF</button>
-          <button id="btn-edit-carteirinha" class="btn-edit">✏️ Editar Dados</button>
-        </div>
+      let isRecording = false;
 
-        <div id="carteirinha-card" class="carteirinha-card-layout">
-          <div class="card-top-bar">
-            <div class="card-brand">
-              <span>PaliVida</span>
-              <small>Carteirinha de Identificação</small>
-            </div>
-            <div class="card-badge">INFORMATIVO</div>
-          </div>
-          <div class="card-body-grid">
-            <div class="card-field full">
-              <span class="field-title">Paciente:</span>
-              <span id="card-val-nome" class="field-value highlight">—</span>
-            </div>
-            <div class="card-field">
-              <span class="field-title">Data Nasc.:</span>
-              <span id="card-val-nasc" class="field-value">—</span>
-            </div>
-            <div class="card-field">
-              <span class="field-title">Doc/SUS:</span>
-              <span id="card-val-doc" class="field-value">—</span>
-            </div>
-            <div class="card-field full">
-              <span class="field-title">Endereço:</span>
-              <span id="card-val-endereco" class="field-value">—</span>
-            </div>
-            <div class="card-field full">
-              <span class="field-title">Diagnóstico Principal:</span>
-              <span id="card-val-diag" class="field-value alert-text">—</span>
-            </div>
-            <div class="card-field">
-              <span class="field-title">Código CID:</span>
-              <span id="card-val-cid" class="field-value">—</span>
-            </div>
-            <div class="card-field">
-              <span class="field-title">Sintomas Recorrentes:</span>
-              <span id="card-val-sintomas" class="field-value">—</span>
-            </div>
-            <div class="card-field full">
-              <span class="field-title">Alergias / Restrições:</span>
-              <span id="card-val-alergias" class="field-value bold-alert">—</span>
-            </div>
-            <div class="card-field full">
-              <span class="field-title">Medicamentos Contínuos:</span>
-              <span id="card-val-meds" class="field-value">—</span>
-            </div>
-            <div class="card-field">
-              <span class="field-title">Responsável / Cuidador:</span>
-              <span id="card-val-cuidador" class="field-value">—</span>
-            </div>
-            <div class="card-field">
-              <span class="field-title">Contato Emergência 1:</span>
-              <span id="card-val-fone" class="field-value highlight-phone">—</span>
-            </div>
-            <div class="card-field">
-              <span class="field-title">Contato Emergência 2:</span>
-              <span id="card-val-fone2" class="field-value highlight-phone">—</span>
-            </div>
-            <div class="card-field">
-              <span class="field-title">Médico Assistente:</span>
-              <span id="card-val-medico" class="field-value">—</span>
-            </div>
-            <div class="card-field">
-              <span class="field-title">Hospital / Unidade:</span>
-              <span id="card-val-unidade" class="field-value">—</span>
-            </div>
-          </div>
-          <div class="card-footer-notice">
-            <span>DOCUMENTO DE CARÁTER INFORMATIVO — NÃO SUBSTITUI LAUDO MÉDICO OFICIAL.</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+      micBtn.addEventListener('click', () => {
+        if (!isRecording) {
+          try {
+            recognition.start();
+          } catch (err) {
+            console.error('Erro ao acionar o reconhecimento de voz:', err);
+          }
+        } else {
+          recognition.stop();
+        }
+      });
 
-  <div id="laudo-digital-view" class="view-section hidden">
-    <div class="laudo-container">
-      <div class="page-title-box">
-        <h2>Minha Carteirinha Digital</h2>
-        <p>Acesse rapidamente sua carteirinha selecionando o arquivo salvo no seu dispositivo.</p>
-      </div>
+      recognition.onstart = () => {
+        isRecording = true;
+        micBtn.classList.add('recording');
+        micBtn.title = 'Ouvindo... Clique para interromper';
+      };
 
-      <div class="open-pdf-card">
-        <div class="open-pdf-info">
-          <h3>📂 Carregar Documento (PDF)</h3>
-          <p>Busque o arquivo PDF da carteirinha em seu celular para tê-lo sempre à mão.</p>
-        </div>
-        <div class="open-pdf-action">
-          <label for="pdf-file-input" class="btn-upload-pdf">🔍 Selecionar Arquivo PDF</label>
-          <input type="file" id="pdf-file-input" accept="application/pdf" class="hidden-file-input">
-        </div>
-      </div>
+      recognition.onend = () => {
+        isRecording = false;
+        micBtn.classList.remove('recording');
+        micBtn.title = 'Buscar por voz';
+      };
 
-      <div id="pdf-viewer-section" class="pdf-viewer-section hidden">
-        <div class="pdf-viewer-header">
-          <div class="pdf-header-texts">
-            <h4>Visualizando Documento</h4>
-            <p class="mobile-pdf-notice mobile-only">Visualização direta indisponível em celulares. Toque no botão abaixo para Abrir ou Salvar o arquivo.</p>
-          </div>
-          <div class="pdf-actions">
-            <!-- Trocado tag <a> por <button> para controle absoluto no JS -->
-            <button id="btn-fullscreen-pdf" class="btn-fullscreen">📱 Abrir / Salvar Arquivo</button>
-            <button id="btn-close-pdf" class="btn-close-pdf">❌ Fechar</button>
-          </div>
-        </div>
-        <div class="pdf-frame-wrapper desktop-only">
-          <iframe id="pdf-frame" src="" title="Visualizador de Carteirinha em PDF"></iframe>
-        </div>
-      </div>
-    </div>
-  </div>
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        searchInput.value = transcript;
+        executeSearch(transcript); // Dispara a busca automaticamente ao concluir
+      };
 
-  <footer class="app-footer">
-    <p>&copy; 2026 PaliVida — Material Didático e Clínico de Apoio.</p>
-  </footer>
-
-  <script src="app.js"></script>
+      recognition.onerror = (event) => {
+        console.error('Erro no áudio:', event.error);
+        isRecording = false;
+        micBtn.classList.remove('recording');
+      };
+    } else {
+      // Oculta o ícone se o navegador não oferecer suporte
+      micBtn.style.display = 'none';
+      console.warn('API de Reconhecimento de Voz não suportada neste navegador.');
+    }
+  </script>
 </body>
 </html>
