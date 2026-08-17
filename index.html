@@ -11,7 +11,6 @@
 </head>
 <body>
 
-  <!-- CABEÇALHO PRINCIPAL -->
   <header class="app-header">
     <div class="header-content">
       <div class="brand" id="brand-logo" role="button" tabindex="0" aria-label="PaliVida — ir para a página de Sintomas">
@@ -19,7 +18,6 @@
         <span class="brand-name">PaliVida</span>
       </div>
 
-      <!-- Navegação Principal: no celular vira barra fixa no rodapé -->
       <nav class="main-nav" aria-label="Navegação principal">
         <button id="nav-symptoms-btn" class="nav-tab active" aria-current="page">
           <span class="nav-icon" aria-hidden="true">🩺</span>
@@ -37,104 +35,69 @@
     </div>
   </header>
 
-  <!-- VISÃO 1: CONSULTA DE SINAIS E SINTOMAS -->
   <div id="symptoms-view" class="view-section">
-
-    <!-- Hero Section com Busca Redirecionável -->
     <section class="hero-search-section">
       <div class="hero-container">
         <h2>O que você está sentindo hoje?</h2>
         <p>Digite um sintoma abaixo, ou toque em uma categoria para ver mais.</p>
-
         <div class="search-box-container">
           <div class="search-wrapper">
             <span class="search-icon" aria-hidden="true">🔍</span>
-            <input
-              type="text"
-              id="search-input"
-              placeholder="Ex: dor, fadiga, ansiedade..."
-              aria-label="Buscar sintoma ou condição clínica"
-              autocomplete="off"
-            >
+            <input type="text" id="search-input" placeholder="Ex: dor, enjoo, ansiedade..." aria-label="Buscar sintoma ou condição clínica" autocomplete="off">
             <button id="search-btn" class="search-action-btn">Buscar</button>
           </div>
-
-          <!-- Dropdown de Sugestões Instantâneas -->
           <ul id="search-suggestions" class="suggestions-list hidden"></ul>
         </div>
       </div>
     </section>
 
-    <!-- Painel de Triagem -->
     <section id="triage-panel" class="triage-panel hidden">
       <div class="triage-container">
         <div class="triage-header">
-          <h3>Nível de Gravidade dos Sintomas Marcados</h3>
+          <h3>Nível de Atenção dos Sintomas Marcados</h3>
           <button id="reset-selection-btn" class="reset-btn">🔄 Limpar Seleção</button>
         </div>
-
-        <!-- Barra do Gradiente Tricromático -->
         <div class="gradient-bar-container">
           <div class="gradient-bar"></div>
           <div id="gradient-indicator" class="gradient-indicator" style="left: 0%;"></div>
         </div>
-
         <div class="gradient-labels">
-          <span class="label-green">🟢 Pouco Preocupante</span>
-          <span class="label-yellow">🟡 Preocupante</span>
-          <span class="label-red">🔴 Muito Preocupante</span>
+          <span class="label-green">🟢 Controle Adequado</span>
+          <span class="label-yellow">🟡 Observação</span>
+          <span class="label-red">🔴 Atenção Necessária</span>
         </div>
-
-        <!-- Banner Dinâmico de Resultado -->
         <div id="triage-result-banner" class="triage-banner level-green" role="status" aria-live="polite">
-          <span id="triage-status-text">Marque os sintomas abaixo para ver o nível de prioridade.</span>
+          <span id="triage-status-text">Marque os sintomas abaixo para ver as orientações.</span>
         </div>
       </div>
     </section>
 
-    <!-- Conteúdo Principal -->
     <div class="app-container">
-
-      <!-- Índice Rápido em formato de chips grandes -->
       <aside class="sidebar">
         <h3>Índice Rápido</h3>
-        <nav id="symptom-nav" class="nav-list" aria-label="Ir direto para uma condição">
-          <!-- Gerado via JS -->
-        </nav>
+        <nav id="symptom-nav" class="nav-list" aria-label="Ir direto para uma condição"></nav>
       </aside>
-
-      <!-- Cartões no Formato Accordion -->
       <main class="main-content">
-        <div id="cards-container" class="cards-grid">
-          <!-- Gerado via JS -->
-        </div>
+        <div id="cards-container" class="cards-grid"></div>
       </main>
-
     </div>
   </div>
 
-  <!-- VISÃO 2: NOVO CADASTRO (GERAR LAUDO) — EM ETAPAS -->
   <div id="novo-cadastro-view" class="view-section hidden">
     <div class="laudo-container">
-
       <div class="page-title-box">
         <h2>Criar Meu Cartão de Identificação</h2>
         <p>Responda algumas perguntas simples, um passo de cada vez, para gerar sua carteirinha gratuitamente.</p>
       </div>
 
-      <!-- BANNER DE AVISO LEGAL E CARÁTER INFORMATIVO -->
       <div class="disclaimer-banner">
         <div class="disclaimer-header">
           <span class="disclaimer-icon" aria-hidden="true">⚠️</span>
           <strong>AVISO IMPORTANTE — DOCUMENTO INFORMATIVO</strong>
         </div>
-        <p>
-          Esta carteirinha e as informações contidas neste formulário possuem <strong>caráter estritamente informativo, orientativo e de suporte de emergência ao paciente e cuidadores</strong>.
-          Este documento <strong>NÃO SUBSTITUI UM LAUDO MÉDICO OFICIAL, ATESTADO OU DIAGNÓSTICO FORMAL</strong>.
-        </p>
+        <p>Esta carteirinha possui caráter estritamente orientativo e de suporte. <strong>NÃO SUBSTITUI UM LAUDO MÉDICO OFICIAL</strong>.</p>
       </div>
 
-      <!-- BARRA DE PROGRESSO DO ASSISTENTE -->
       <div class="wizard-progress" role="group" aria-label="Progresso do formulário">
         <div class="wizard-progress-bar">
           <div id="wizard-progress-fill" class="wizard-progress-fill" style="width: 25%;"></div>
@@ -142,10 +105,7 @@
         <p id="wizard-step-label" class="wizard-step-label">Passo 1 de 4 — Dados do Paciente</p>
       </div>
 
-      <!-- FORMULÁRIO DE CADASTRO DO PACIENTE E DIAGNÓSTICO -->
       <form id="carteirinha-form" class="laudo-form" novalidate>
-
-        <!-- PASSO 1: DADOS PESSOAIS -->
         <fieldset class="form-section wizard-step" data-step="1">
           <legend>1. Dados do Paciente</legend>
           <div class="form-grid">
@@ -168,7 +128,6 @@
           </div>
         </fieldset>
 
-        <!-- PASSO 2: CUIDADOR E CONTATO DE EMERGÊNCIA -->
         <fieldset class="form-section wizard-step hidden" data-step="2">
           <legend>2. Cuidador e Contato de Emergência</legend>
           <div class="form-grid">
@@ -191,7 +150,6 @@
           </div>
         </fieldset>
 
-        <!-- PASSO 3: INFORMAÇÕES CLÍNICAS E DIAGNÓSTICAS -->
         <fieldset class="form-section wizard-step hidden" data-step="3">
           <legend>3. Diagnóstico e Condições Clínicas</legend>
           <div class="form-grid">
@@ -218,7 +176,6 @@
           </div>
         </fieldset>
 
-        <!-- PASSO 4: ACOMPANHAMENTO PROFISSIONAL -->
         <fieldset class="form-section wizard-step hidden" data-step="4">
           <legend>4. Equipe de Saúde (opcional)</legend>
           <div class="form-grid">
@@ -244,20 +201,14 @@
           <button type="button" id="wizard-next-btn" class="btn-wizard-next">Continuar ▶</button>
           <button type="submit" id="wizard-submit-btn" class="btn-submit hidden">✅ Gerar Minha Carteirinha</button>
         </div>
-
-        <div class="form-actions">
-          <button type="submit" class="btn-submit">Gerar Minha Carteirinha</button>
-        </div>
       </form>
 
-      <!-- ÁREA DE EXIBIÇÃO E PRÉ-VISUALIZAÇÃO DA CARTEIRINHA -->
       <div id="carteirinha-preview-area" class="preview-area hidden">
         <div class="preview-actions">
           <button id="btn-print-carteirinha" class="btn-print">🖨️ Imprimir / Salvar PDF</button>
           <button id="btn-edit-carteirinha" class="btn-edit">✏️ Editar Dados</button>
         </div>
 
-        <!-- CARTÃO DE IDENTIFICAÇÃO ESTILIZADO -->
         <div id="carteirinha-card" class="carteirinha-card-layout">
           <div class="card-top-bar">
             <div class="card-brand">
@@ -266,7 +217,6 @@
             </div>
             <div class="card-badge">INFORMATIVO</div>
           </div>
-
           <div class="card-body-grid">
             <div class="card-field full">
               <span class="field-title">Paciente:</span>
@@ -325,7 +275,6 @@
               <span id="card-val-unidade" class="field-value">—</span>
             </div>
           </div>
-
           <div class="card-footer-notice">
             <span>DOCUMENTO DE CARÁTER INFORMATIVO — NÃO SUBSTITUI LAUDO MÉDICO OFICIAL.</span>
           </div>
@@ -334,44 +283,40 @@
     </div>
   </div>
 
-  <!-- VISÃO 3: LAUDO DIGITAL (ABRIR ARQUIVO) -->
   <div id="laudo-digital-view" class="view-section hidden">
     <div class="laudo-container">
-
       <div class="page-title-box">
         <h2>Minha Carteirinha Digital</h2>
-        <p>Acesse rapidamente sua carteirinha. Selecione o arquivo PDF que você salvou no seu celular ou computador.</p>
+        <p>Acesse rapidamente sua carteirinha selecionando o arquivo salvo no seu dispositivo.</p>
       </div>
 
-      <!-- BLOCO: ABRIR CARTEIRINHA EM PDF EXISTENTE -->
       <div class="open-pdf-card">
         <div class="open-pdf-info">
           <h3>📂 Carregar Documento (PDF)</h3>
-          <p>Busque o arquivo PDF da carteirinha em seu dispositivo para tê-lo sempre à mão em consultas e emergências.</p>
+          <p>Busque o arquivo PDF da carteirinha em seu celular para tê-lo sempre à mão.</p>
         </div>
         <div class="open-pdf-action">
-          <label for="pdf-file-input" class="btn-upload-pdf">
-            🔍 Selecionar Arquivo PDF
-          </label>
+          <label for="pdf-file-input" class="btn-upload-pdf">🔍 Selecionar Arquivo PDF</label>
           <input type="file" id="pdf-file-input" accept="application/pdf" class="hidden-file-input">
         </div>
       </div>
 
-      <!-- BLOCO: ÁREA DE VISUALIZAÇÃO DO PDF IMPORTADO -->
       <div id="pdf-viewer-section" class="pdf-viewer-section hidden">
         <div class="pdf-viewer-header">
-          <h4>Visualizando Documento</h4>
+          <div class="pdf-header-texts">
+            <h4>Visualizando Documento</h4>
+            <p class="mobile-pdf-notice mobile-only">Visualização direta indisponível em celulares. Toque no botão abaixo para Abrir ou Salvar o arquivo.</p>
+          </div>
           <div class="pdf-actions">
-            <!-- Botão essencial para mobile (fallback se o iframe falhar) -->
-            <a id="btn-fullscreen-pdf" class="btn-fullscreen" target="_blank" rel="noopener noreferrer">📱 Abrir no Navegador</a>
+            <!-- Trocado tag <a> por <button> para controle absoluto no JS -->
+            <button id="btn-fullscreen-pdf" class="btn-fullscreen">📱 Abrir / Salvar Arquivo</button>
             <button id="btn-close-pdf" class="btn-close-pdf">❌ Fechar</button>
           </div>
         </div>
-        <div class="pdf-frame-wrapper">
+        <div class="pdf-frame-wrapper desktop-only">
           <iframe id="pdf-frame" src="" title="Visualizador de Carteirinha em PDF"></iframe>
         </div>
       </div>
-
     </div>
   </div>
 
