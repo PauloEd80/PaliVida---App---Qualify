@@ -44,6 +44,8 @@
           <div class="search-wrapper">
             <span class="search-icon" aria-hidden="true">🔍</span>
             <input type="text" id="search-input" placeholder="Ex: dor, enjoo, ansiedade..." aria-label="Buscar sintoma ou condição clínica" autocomplete="off">
+            <!-- CORREÇÃO: Adicionado botão de microfone -->
+            <button id="mic-btn" class="mic-action-btn" aria-label="Buscar por voz" title="Buscar por voz">🎤</button>
             <button id="search-btn" class="search-action-btn">Buscar</button>
           </div>
           <ul id="search-suggestions" class="suggestions-list hidden"></ul>
@@ -51,20 +53,21 @@
       </div>
     </section>
 
+    <!-- CORREÇÃO: O painel de triagem agora é fixo ao rolar a tela -->
     <section id="triage-panel" class="triage-panel hidden">
       <div class="triage-container">
         <div class="triage-header">
-          <h3>Nível de Atenção dos Sintomas Marcados</h3>
-          <button id="reset-selection-btn" class="reset-btn">🔄 Limpar Seleção</button>
+          <h3>Nível de Atenção</h3>
+          <button id="reset-selection-btn" class="reset-btn">🔄 Limpar</button>
         </div>
         <div class="gradient-bar-container">
           <div class="gradient-bar"></div>
           <div id="gradient-indicator" class="gradient-indicator" style="left: 0%;"></div>
         </div>
         <div class="gradient-labels">
-          <span class="label-green">🟢 Controle Adequado</span>
-          <span class="label-yellow">🟡 Observação</span>
-          <span class="label-red">🔴 Atenção Necessária</span>
+          <span class="label-green">🟢 Adequado</span>
+          <span class="label-yellow">🟡 Observar</span>
+          <span class="label-red">🔴 Atenção</span>
         </div>
         <div id="triage-result-banner" class="triage-banner level-green" role="status" aria-live="polite">
           <span id="triage-status-text">Marque os sintomas abaixo para ver as orientações.</span>
@@ -308,7 +311,6 @@
             <p class="mobile-pdf-notice mobile-only">Visualização direta indisponível em celulares. Toque no botão abaixo para Abrir ou Salvar o arquivo.</p>
           </div>
           <div class="pdf-actions">
-            <!-- Trocado tag <a> por <button> para controle absoluto no JS -->
             <button id="btn-fullscreen-pdf" class="btn-fullscreen">📱 Abrir / Salvar Arquivo</button>
             <button id="btn-close-pdf" class="btn-close-pdf">❌ Fechar</button>
           </div>
