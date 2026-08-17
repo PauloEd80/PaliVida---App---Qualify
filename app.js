@@ -95,7 +95,7 @@ const cardsContainer = document.getElementById('cards-container');
 const symptomNav = document.getElementById('symptom-nav');
 const searchInput = document.getElementById('search-input');
 const searchBtn = document.getElementById('search-btn');
-const micBtn = document.getElementById('mic-btn'); // Novo botão de voz
+const micBtn = document.getElementById('mic-btn'); 
 const suggestionsList = document.getElementById('search-suggestions');
 
 const triagePanel = document.getElementById('triage-panel');
@@ -232,7 +232,6 @@ function openAndScrollToCard(cardId) {
   toggleCard(cardId, true);
   const card = document.getElementById(cardId);
   if (card) {
-    // Calculando um pequeno offset para considerar o painel sticky
     const yOffset = -180; 
     const y = card.getBoundingClientRect().top + window.pageYOffset + yOffset;
     window.scrollTo({top: y, behavior: 'smooth'});
@@ -243,7 +242,6 @@ function openAndScrollToCard(cardId) {
   suggestionsList.classList.add('hidden');
 }
 
-// CORREÇÃO: Função de execução da busca ao clicar no botão ou apertar Enter
 function performSearch() {
   const termo = searchInput.value.toLowerCase().trim();
   if (!termo) return;
@@ -308,7 +306,6 @@ searchInput.addEventListener('input', (e) => {
   }
 });
 
-// CORREÇÃO: Implementação da Busca por Voz (Web Speech API)
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 if (SpeechRecognition) {
   const recognition = new SpeechRecognition();
@@ -325,9 +322,9 @@ if (SpeechRecognition) {
 
   recognition.addEventListener('result', (e) => {
     const transcript = e.results[0][0].transcript;
-    searchInput.value = transcript.replace('.', ''); // Remove ponto final
-    searchInput.dispatchEvent(new Event('input')); // Aciona as sugestões
-    setTimeout(performSearch, 500); // Executa a busca automaticamente após meio segundo
+    searchInput.value = transcript.replace('.', '');
+    searchInput.dispatchEvent(new Event('input')); 
+    setTimeout(performSearch, 500); 
   });
 
   recognition.addEventListener('end', () => {
@@ -342,7 +339,7 @@ if (SpeechRecognition) {
     searchInput.placeholder = "Erro ao ouvir. Tente digitar.";
   });
 } else {
-  micBtn.style.display = 'none'; // Oculta se o navegador não suportar
+  micBtn.style.display = 'none'; 
 }
 
 function attachCheckboxListeners() {
@@ -350,16 +347,27 @@ function attachCheckboxListeners() {
     chk.addEventListener('change', (e) => {
       const value = e.target.value;
       const type = e.target.dataset.type;
+      const parentLabel = e.target.closest('.symptom-checkbox-label');
+
+      // CORREÇÃO: Utilizando testes explícitos para evitar strings vazias que causavam erro na manipulação do DOM.
       if (e.target.checked) {
-        if (type === 'symptom') selectedSymptoms.add(value);
-        if (type === 'alert') selectedAlerts.add(value);
-        e.target.closest('.symptom-checkbox-label').classList.add('selected', type === 'alert' ? 'alert-item' : '');
+        if (type === 'symptom') {
+            selectedSymptoms.add(value);
+        } else if (type === 'alert') {
+            selectedAlerts.add(value);
+            parentLabel.classList.add('alert-item'); // Inserção de estilo condicional de alerta separada
+        }
+        parentLabel.classList.add('selected'); // Aplicado a todos independente do tipo
       } else {
-        if (type === 'symptom') selectedSymptoms.delete(value);
-        if (type === 'alert') selectedAlerts.delete(value);
-        e.target.closest('.symptom-checkbox-label').classList.remove('selected', 'alert-item');
+        if (type === 'symptom') {
+            selectedSymptoms.delete(value);
+        } else if (type === 'alert') {
+            selectedAlerts.delete(value);
+        }
+        parentLabel.classList.remove('selected', 'alert-item');
       }
-      updateTriageEvaluator();
+      
+      updateTriageEvaluator(); // A execução fluirá normalmente até aqui agora.
     });
   });
 }
@@ -376,7 +384,6 @@ function updateTriageEvaluator() {
   triagePanel.classList.remove('hidden');
   let pos = 0;
 
-  // CORREÇÃO: Textos resumidos para melhor leitura no celular (evita amontoamento)
   if (totalAlerts > 0 || totalSymptoms >= 6) {
     pos = Math.min(75 + (totalAlerts * 8), 98);
     triageBanner.className = 'triage-banner level-red';
