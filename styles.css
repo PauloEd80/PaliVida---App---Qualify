@@ -182,6 +182,7 @@ body {
   border-radius: 50px;
   padding: 0.3rem 0.4rem 0.3rem 1.2rem;
   box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  width: 100%;
 }
 
 .search-icon {
@@ -190,8 +191,11 @@ body {
   color: var(--text-muted);
 }
 
+/* CORREÇÃO: min-width: 0 impede o input de forçar a expansão do contêiner flex no mobile */
 #search-input {
   flex: 1;
+  min-width: 0;
+  width: 100%;
   border: none;
   outline: none;
   font-size: 1rem;
@@ -200,7 +204,6 @@ body {
   background: transparent;
 }
 
-/* CORREÇÃO: Estilização do Botão de Voz */
 .mic-action-btn {
   background: transparent;
   border: none;
@@ -241,6 +244,7 @@ body {
   cursor: pointer;
   transition: background-color 0.2s;
   min-height: 44px;
+  flex-shrink: 0; /* Garante que o botão não sofra achatamento */
 }
 
 .search-action-btn:hover {
@@ -295,15 +299,14 @@ body {
 }
 
 /* --------------------------------------------------------------------------
-   5. Painel de Triagem & Avaliador (CORREÇÃO: Sticky Behavior)
+   5. Painel de Triagem & Avaliador
    -------------------------------------------------------------------------- */
 .triage-panel {
   max-width: 1200px;
   margin: 1.5rem auto 0 auto;
   padding: 0 1.5rem;
-  /* Garante que acompanhe o scroll */
   position: sticky;
-  top: 75px; /* Altura do cabeçalho desktop */
+  top: 75px; 
   z-index: 400; 
   transition: all 0.3s ease;
 }
@@ -312,11 +315,11 @@ body {
   background-color: #ffffff;
   border-radius: var(--radius);
   padding: 1.5rem;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12); /* Sombra maior p/ destacar que está por cima */
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
   border: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
-  gap: 0.8rem; /* Reduzido levemente p/ otimizar espaço */
+  gap: 0.8rem;
 }
 
 .triage-header {
@@ -485,7 +488,6 @@ body {
   gap: 1.2rem;
 }
 
-/* Accordion Card */
 .card {
   background-color: #ffffff;
   border-radius: var(--radius);
@@ -1239,18 +1241,21 @@ body {
     font-size: 1.5rem;
   }
 
+  /* CORREÇÃO: Ajustes do container de busca no celular */
   .search-wrapper {
-    padding: 0.2rem 0.3rem 0.2rem 1rem;
+    padding: 0.2rem 0.3rem 0.2rem 0.8rem;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .search-action-btn {
     padding: 0.6rem 1rem;
     font-size: 0.85rem;
+    min-height: 40px; 
   }
 
-  /* CORREÇÃO: Ajustes mobile para o painel da triagem que agora é sticky */
   .triage-panel {
-    top: 60px; /* Adapta-se à altura exata do menu superior mobile */
+    top: 60px;
     margin-top: 1rem;
     padding: 0 1rem;
   }
@@ -1265,7 +1270,7 @@ body {
   }
   
   .triage-banner {
-    font-size: 0.85rem; /* Fonte menor p/ não quebrar no celular */
+    font-size: 0.85rem;
     padding: 0.6rem;
   }
 
