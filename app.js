@@ -65,6 +65,19 @@ const dadosClinicos = [
   }
 ];
 
+// Ícone de reconhecimento rápido por condição — ajuda quem tem pressa
+// (enfermeiros) e quem tem dificuldade de leitura (pacientes/cuidadores).
+const iconesPorId = {
+  "constipacao": "🚽",
+  "depressao": "😔",
+  "ansiedade": "😰",
+  "dor": "🤕",
+  "nausea-vomito": "🤢",
+  "dispneia": "🫁",
+  "fadiga": "🔋",
+  "xerostomia": "💧"
+};
+
 const selectedSymptoms = new Set();
 const selectedAlerts = new Set();
 
@@ -94,6 +107,24 @@ const previewArea = document.getElementById('carteirinha-preview-area');
 const btnPrint = document.getElementById('btn-print-carteirinha');
 const btnEdit = document.getElementById('btn-edit-carteirinha');
 
+// Elementos do assistente em etapas (wizard) do cadastro
+const wizardSteps = Array.from(document.querySelectorAll('.wizard-step'));
+const wizardBackBtn = document.getElementById('wizard-back-btn');
+const wizardNextBtn = document.getElementById('wizard-next-btn');
+const wizardSubmitBtn = document.getElementById('wizard-submit-btn');
+const wizardProgressFill = document.getElementById('wizard-progress-fill');
+const wizardStepLabel = document.getElementById('wizard-step-label');
+const wizardErrorMsg = document.getElementById('wizard-error-msg');
+const totalWizardSteps = wizardSteps.length;
+let currentWizardStep = 1;
+
+const stepTitles = {
+  1: 'Dados do Paciente',
+  2: 'Cuidador e Contato de Emergência',
+  3: 'Diagnóstico e Condições Clínicas',
+  4: 'Equipe de Saúde (opcional)'
+};
+
 const pdfFileInput = document.getElementById('pdf-file-input');
 const pdfViewerSection = document.getElementById('pdf-viewer-section');
 const pdfFrame = document.getElementById('pdf-frame');
@@ -105,20 +136,26 @@ function switchView(view) {
   symptomsView.classList.add('hidden');
   novoCadastroView.classList.add('hidden');
   laudoView.classList.add('hidden');
-  
+
   navSymptomsBtn.classList.remove('active', 'nav-highlight');
   navNovoCadastroBtn.classList.remove('active', 'nav-highlight');
   navLaudoBtn.classList.remove('active', 'nav-highlight');
+  navSymptomsBtn.removeAttribute('aria-current');
+  navNovoCadastroBtn.removeAttribute('aria-current');
+  navLaudoBtn.removeAttribute('aria-current');
 
   if (view === 'symptoms') {
     symptomsView.classList.remove('hidden');
     navSymptomsBtn.classList.add('active');
+    navSymptomsBtn.setAttribute('aria-current', 'page');
   } else if (view === 'novo-cadastro') {
     novoCadastroView.classList.remove('hidden');
     navNovoCadastroBtn.classList.add('active', 'nav-highlight');
+    navNovoCadastroBtn.setAttribute('aria-current', 'page');
   } else if (view === 'laudo') {
     laudoView.classList.remove('hidden');
     navLaudoBtn.classList.add('active', 'nav-highlight');
+    navLaudoBtn.setAttribute('aria-current', 'page');
   }
 }
 
@@ -126,13 +163,19 @@ navSymptomsBtn.addEventListener('click', () => switchView('symptoms'));
 navNovoCadastroBtn.addEventListener('click', () => switchView('novo-cadastro'));
 navLaudoBtn.addEventListener('click', () => switchView('laudo'));
 brandLogo.addEventListener('click', () => switchView('symptoms'));
+brandLogo.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    switchView('symptoms');
+  }
+});
 
 function renderSidebar() {
   symptomNav.innerHTML = '';
   dadosClinicos.forEach(item => {
     const link = document.createElement('a');
     link.className = 'nav-item';
-    link.textContent = item.titulo;
+    link.innerHTML = `<span aria-hidden="true">${iconesPorId[item.id] || '🔹'}</span><span>${item.titulo}</span>`;
     link.addEventListener('click', (e) => {
       e.preventDefault();
       openAndScrollToCard(item.id);
@@ -162,15 +205,19 @@ function renderCards() {
         const selectedClass = selectedAlerts.has(a) ? 'selected alert-item' : '';
         return `<label class="symptom-checkbox-label ${selectedClass}"><input type="checkbox" data-type="alert" value="${a}" ${isChecked}><span>⚠️ ${a}</span></label>`;
       }).join('');
-      alertasSection = `<div style="margin-top: 1rem;"><div class="section-label" style="color: #991b1b;">Sinais de Alerta</div><div class="symptoms-checkbox-grid">${alertasItems}</div></div>`;
+      alertasSection = `<div class="alert-section"><div class="section-label alert-section-label">⚠️ Sinais de Alerta — Procure ajuda se notar:</div><div class="symptoms-checkbox-grid">${alertasItems}</div></div>`;
     }
 
     const refsHTML = item.referencias.map(r => `<li>${r}</li>`).join('');
+    const icone = iconesPorId[item.id] || '🔹';
 
     card.innerHTML = `
       <div class="card-header" onclick="toggleCard('${item.id}')">
-        <h3 class="card-title">${item.titulo}</h3>
-        <span class="accordion-icon">▼</span>
+        <div class="card-title-group">
+          <span class="card-icon" aria-hidden="true">${icone}</span>
+          <h3 class="card-title">${item.titulo}</h3>
+        </div>
+        <span class="accordion-icon" aria-hidden="true">▼</span>
       </div>
       <div class="card-body">
         <p class="card-definition">${item.definicao}</p>
@@ -247,7 +294,7 @@ searchInput.addEventListener('input', (e) => {
 searchBtn.addEventListener('click', () => {
   const termo = searchInput.value.toLowerCase().trim();
   if (!termo) return;
-  const itemEncontrado = dadosClinicos.find(item => 
+  const itemEncontrado = dadosClinicos.find(item =>
     item.titulo.toLowerCase().includes(termo) ||
     item.sinaisSintomas.some(s => s.toLowerCase().includes(termo))
   );
@@ -321,34 +368,153 @@ resetBtn.addEventListener('click', () => {
   renderCards();
 });
 
+/* ==========================================================================
+   ASSISTENTE EM ETAPAS (WIZARD) DO CADASTRO
+   Mostra um bloco de perguntas por vez, com barra de progresso e validação
+   simples e clara antes de avançar — menos coisa na tela a cada momento.
+   ========================================================================== */
+function getStepFields(stepNum) {
+  const step = wizardSteps.find(s => parseInt(s.dataset.step, 10) === stepNum);
+  return step ? Array.from(step.querySelectorAll('[required]')) : [];
+}
+
+function validateFields(fields) {
+  for (const field of fields) {
+    if (!field.value || !field.value.trim()) {
+      field.classList.add('field-error');
+      field.focus();
+      return field;
+    }
+    field.classList.remove('field-error');
+  }
+  return null;
+}
+
+function showWizardError(msg) {
+  if (!wizardErrorMsg) return;
+  wizardErrorMsg.textContent = msg;
+  wizardErrorMsg.classList.remove('hidden');
+}
+
+function hideWizardError() {
+  if (!wizardErrorMsg) return;
+  wizardErrorMsg.classList.add('hidden');
+  wizardErrorMsg.textContent = '';
+}
+
+function renderWizardStep() {
+  wizardSteps.forEach(step => {
+    const stepNum = parseInt(step.dataset.step, 10);
+    step.classList.toggle('hidden', stepNum !== currentWizardStep);
+  });
+  if (wizardBackBtn) wizardBackBtn.classList.toggle('hidden', currentWizardStep === 1);
+  if (wizardNextBtn) wizardNextBtn.classList.toggle('hidden', currentWizardStep === totalWizardSteps);
+  if (wizardSubmitBtn) wizardSubmitBtn.classList.toggle('hidden', currentWizardStep !== totalWizardSteps);
+  if (wizardProgressFill) wizardProgressFill.style.width = `${(currentWizardStep / totalWizardSteps) * 100}%`;
+  if (wizardStepLabel) wizardStepLabel.textContent = `Passo ${currentWizardStep} de ${totalWizardSteps} — ${stepTitles[currentWizardStep] || ''}`;
+}
+
+function goToStepContaining(field) {
+  const step = field.closest('.wizard-step');
+  if (step) {
+    currentWizardStep = parseInt(step.dataset.step, 10);
+    renderWizardStep();
+    field.focus();
+  }
+}
+
+if (wizardNextBtn) {
+  wizardNextBtn.addEventListener('click', () => {
+    const invalid = validateFields(getStepFields(currentWizardStep));
+    if (invalid) {
+      showWizardError('Preencha os campos obrigatórios (marcados com *) para continuar.');
+      return;
+    }
+    hideWizardError();
+    if (currentWizardStep < totalWizardSteps) {
+      currentWizardStep++;
+      renderWizardStep();
+      const activeStep = wizardSteps.find(s => parseInt(s.dataset.step, 10) === currentWizardStep);
+      if (activeStep) activeStep.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+}
+
+if (wizardBackBtn) {
+  wizardBackBtn.addEventListener('click', () => {
+    hideWizardError();
+    if (currentWizardStep > 1) {
+      currentWizardStep--;
+      renderWizardStep();
+      const activeStep = wizardSteps.find(s => parseInt(s.dataset.step, 10) === currentWizardStep);
+      if (activeStep) activeStep.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+}
+
+// Preenche um campo do cartão como link de telefone clicável (tel:),
+// para permitir ligar com um único toque em uma emergência.
+function setPhoneField(el, value) {
+  if (!el) return;
+  el.innerHTML = '';
+  if (!value) {
+    el.textContent = '—';
+    return;
+  }
+  const link = document.createElement('a');
+  link.href = `tel:${value.replace(/[^0-9+]/g, '')}`;
+  link.textContent = value;
+  el.appendChild(link);
+}
+
 carteirinhaForm.addEventListener('submit', (e) => {
   e.preventDefault();
+
+  // Validação final: garante que nenhum campo obrigatório de nenhuma etapa
+  // ficou em branco, e leva a pessoa direto para a etapa que falta corrigir.
+  const todosObrigatorios = Array.from(carteirinhaForm.querySelectorAll('[required]'));
+  const campoInvalido = validateFields(todosObrigatorios);
+  if (campoInvalido) {
+    goToStepContaining(campoInvalido);
+    showWizardError('Preencha os campos obrigatórios (marcados com *) antes de gerar sua carteirinha.');
+    return;
+  }
+  hideWizardError();
+
   const nome = document.getElementById('paciente-nome').value;
   const nasc = document.getElementById('paciente-nascimento').value;
   const doc = document.getElementById('paciente-documento').value;
+  const endereco = document.getElementById('paciente-endereco').value || 'Não informado';
   const diag = document.getElementById('diagnostico-principal').value;
   const cid = document.getElementById('codigo-cid').value || 'Não informado';
   const sintomas = document.getElementById('sintomas-predominantes').value;
   const alergias = document.getElementById('alergias-restricoes').value || 'Nenhuma declarada';
   const meds = document.getElementById('medicamentos-continuos').value || 'Nenhum declarado';
   const cuidador = document.getElementById('cuidador-nome').value;
+  const parentesco = document.getElementById('cuidador-parentesco').value;
   const fone = document.getElementById('telefone-emergencia-1').value;
+  const fone2 = document.getElementById('telefone-emergencia-2').value;
   const medico = document.getElementById('medico-assistente').value || 'Não informado';
+  const crm = document.getElementById('medico-crm').value;
   const unidade = document.getElementById('unidade-saude').value || 'Não informada';
 
   const dataFormatada = nasc.split('-').reverse().join('/');
+  const cuidadorCompleto = parentesco ? `${cuidador} (${parentesco})` : cuidador;
+  const medicoCompleto = crm ? `${medico} — CRM ${crm}` : medico;
 
   document.getElementById('card-val-nome').textContent = nome;
   document.getElementById('card-val-nasc').textContent = dataFormatada;
   document.getElementById('card-val-doc').textContent = doc;
+  document.getElementById('card-val-endereco').textContent = endereco;
   document.getElementById('card-val-diag').textContent = diag;
   document.getElementById('card-val-cid').textContent = cid;
   document.getElementById('card-val-sintomas').textContent = sintomas;
   document.getElementById('card-val-alergias').textContent = alergias;
   document.getElementById('card-val-meds').textContent = meds;
-  document.getElementById('card-val-cuidador').textContent = cuidador;
-  document.getElementById('card-val-fone').textContent = fone;
-  document.getElementById('card-val-medico').textContent = medico;
+  document.getElementById('card-val-cuidador').textContent = cuidadorCompleto;
+  setPhoneField(document.getElementById('card-val-fone'), fone);
+  setPhoneField(document.getElementById('card-val-fone2'), fone2);
+  document.getElementById('card-val-medico').textContent = medicoCompleto;
   document.getElementById('card-val-unidade').textContent = unidade;
 
   previewArea.classList.remove('hidden');
@@ -376,7 +542,7 @@ if (pdfFileInput) {
     }
     currentPdfBlobUrl = URL.createObjectURL(file);
     pdfFrame.src = currentPdfBlobUrl;
-    
+
     // Atualiza o link fallback para garantir visualização no celular (iOS/Android limitam iframes para PDF)
     if (btnFullscreenPdf) {
       btnFullscreenPdf.href = currentPdfBlobUrl;
@@ -405,4 +571,5 @@ if (btnClosePdf) {
 document.addEventListener('DOMContentLoaded', () => {
   renderSidebar();
   renderCards();
+  renderWizardStep();
 });
